@@ -33,8 +33,9 @@ style: |
 4. **第2章** - Parser & AST（構文解析）
 5. **第3章** - Evaluator（評価器）
 6. **第4章** - インタプリタの拡張
-7. **学んだこと・気づき**
-8. **聞きたいこと**
+7. **付録** - マクロシステム
+8. **学んだこと・気づき**
+9. **聞きたいこと**
 
 ---
 
@@ -80,6 +81,12 @@ people["name"];  // => Monkey
 
 len("Hello");  // => 5
 push(arr, 4);  // => [1, "hello", fn, 4]
+
+// 付録で追加：マクロで新しい構文を定義
+let unless = macro(cond, cons, alt) {
+    quote(if (!(unquote(cond))) { unquote(cons) } else { unquote(alt) });
+};
+unless(10 > 5, puts("small"), puts("big"));
 ```
 
 ---
@@ -97,6 +104,11 @@ push(arr, 4);  // => [1, "hello", fn, 4]
 ┌──────────────┐
 │   Parser     │  第2章：トークン列 → AST
 │  （構文解析） │
+└──────────────┘
+       ↓
+┌──────────────┐
+│ Macro Expand │  付録：マクロ定義の抽出 → マクロ呼び出しの展開
+│（マクロ展開） │
 └──────────────┘
        ↓
 ┌──────────────┐
@@ -638,6 +650,301 @@ Monkey言語にはfor/whileループがない → **再帰で繰り返しを表�
 
 ---
 
+# 付録：マクロシステム
+
+---
+
+# unless を実装したい
+
+`if` の反対 — **条件が偽のときに実行**する制御構造
+
+```javascript
+unless(10 > 5, puts("not greater"), puts("greater"));
+// 10 > 5 は真 → "greater" だけ出力されてほしい
+```
+
+これを Monkey 言語に追加するには？
+
+---
+
+# 方法1: Go側（インタプリタ本体）に組み込む
+
+`if` と同じように、Go のコードを**4ファイル改修して再コンパイル**
+
+```
+1. token.go      UNLESS トークンを追加
+2. ast.go        UnlessExpression ノードを追加
+3. parser.go     parseUnlessExpression を追加
+4. evaluator.go  UnlessExpression の評価ロジックを追加
+```
+
+正しく動くが、`unless` を追加したいだけで**インタプリタを書き換える**のは大げさ
+→ Monkeyのユーザーが自由に新しい構文を追加できない
+
+---
+
+# 方法2: Monkey の関数として実装する（問題あり）
+
+```javascript
+let unless = fn(condition, consequence, alternative) {
+    if (!condition) { consequence } else { alternative }
+};
+
+unless(true, puts("A"), puts("B"));
+```
+
+一見うまくいきそうだが、**関数呼び出しの評価順序**が問題になる
+
+---
+
+# 関数の引数は「渡す前に全部評価される」
+
+```javascript
+unless(true, puts("A"), puts("B"));
+```
+
+```
+Step 1: 引数1を評価  →  true              OK
+Step 2: 引数2を評価  →  puts("A") を実行  → 画面に "A" が出る
+Step 3: 引数3を評価  →  puts("B") を実行  → 画面に "B" が出る
+Step 4: やっと関数本体に入る
+        if (!true) { ... } else { ... }
+```
+
+Step 2〜3 の時点で**両方とも実行済み** → 本体で分岐しても手遅れ
+これは Monkey に限らず、**ほとんどの言語の関数呼び出しがこの順序**で動く
+
+---
+
+# 方法3: マクロシステム
+
+Go側を改修せず、かつ引数の先行評価問題も起きない第3の方法
+
+**マクロは「評価の前にコードを書き換える」フェーズを挟む**
+
+```
+Parser → [マクロ展開] → Evaluator
+              ↑
+         ここでASTを書き換える
+         （まだ何も実行されていない）
+```
+
+マクロ展開の時点ではプログラムはまだ「コードの構造（AST）」でしかない
+→ `puts("A")` も `puts("B")` もただの木のノード
+→ 自由に配置し直せる。その後で評価器が動いて、初めて実行される
+
+---
+
+# 3つの方法の比較
+
+| 方法 | 動作 | 代償 |
+|------|------|------|
+| **Go側に組み込み** | 正しく動く | Go 4ファイル改修 + 再コンパイル |
+| **Monkey の関数** | 引数が先に全部評価される → **壊れる** | — |
+| **マクロ** | 正しく動く | **Monkeyコードだけで完結** |
+
+→ マクロなら**インタプリタを触らず**、Monkeyのユーザーが新しい制御構造を追加できる
+
+---
+
+# マクロとは何か
+
+**「評価の前にコードを書き換える仕組み」**
+
+|  | 関数 | マクロ |
+|--|------|--------|
+| 引数 | **評価してから**値を渡す | **ASTのまま**渡す |
+| 戻り値 | 値（Object） | AST（Quote経由） |
+| 実行タイミング | 評価時 | 評価**前**（コード書き換え） |
+| できること | 値の計算 | **構文の変換** |
+
+---
+
+# マクロシステムの3つの柱
+
+```
+1. quote / unquote     コードをデータとして扱う
+2. Modify              ASTを再帰的に走査・変換する汎用エンジン
+3. DefineMacros /      マクロ定義の抽出と呼び出しの展開
+   ExpandMacros
+```
+
+実装の変更箇所:
+
+| レイヤー | 変更内容 |
+|---------|---------|
+| token | `MACRO` キーワード追加 |
+| ast | `MacroLiteral` ノード + `Modify` 関数（新規） |
+| parser | `parseMacroLiteral` 追加 |
+| object | `Quote`, `Macro` オブジェクト追加 |
+| evaluator | quote/unquote 処理 + `macro_expansion.go`（新規） |
+| repl | マクロ展開パイプライン追加 |
+
+---
+
+# 柱1: quote / unquote — コードをデータとして扱う
+
+通常 `1 + 2` は `3` に評価されるが、`quote` で囲むと**ASTのまま保持**
+
+```javascript
+quote(1 + 2)           // => QUOTE((1 + 2))  ← 評価されない！
+quote(foobar + barfoo) // => QUOTE((foobar + barfoo))
+```
+
+`unquote` は quote の中で**「ここだけは評価して」**と指定する脱出口
+
+```javascript
+quote(unquote(4 + 4))                // => QUOTE(8)
+quote(8 + unquote(4 + 4))            // => QUOTE((8 + 8))
+let foobar = 8;
+quote(unquote(foobar))               // => QUOTE(8)
+```
+
+`unquote` の部分だけ評価され、結果がASTノードに変換されて埋め込まれる
+
+---
+
+# quote の実装
+
+`CallExpression` の評価で `quote` を**特別扱い**する
+
+```go
+// evaluator.go — Eval関数内
+case *ast.CallExpression:
+    if node.Function.TokenLiteral() == "quote" {
+        return quote(node.Arguments[0], env) // 引数を評価しない！
+    }
+    // 通常の関数呼び出し...
+```
+
+```go
+func quote(node ast.Node, env *object.Environment) object.Object {
+    node = evalUnquoteCalls(node, env) // unquote()だけ先に処理
+    return &object.Quote{Node: node}   // ASTノードをそのまま返す
+}
+```
+
+ポイント: `quote` は組み込み関数ではなく**構文レベルの特別扱い**
+（引数を評価しないので、通常の関数では実現できない）
+
+---
+
+# 柱2: Modify — AST変換の汎用エンジン
+
+全ASTノード型を**再帰的に走査**して、各ノードに変換関数を適用
+
+```go
+func Modify(node Node, modifier ModifierFunc) Node {
+    switch node := node.(type) {
+    case *InfixExpression:
+        node.Left = Modify(node.Left, modifier)   // 左を先に変換
+        node.Right = Modify(node.Right, modifier)  // 右を先に変換
+    case *IfExpression:
+        node.Condition = Modify(node.Condition, modifier)
+        // ...
+    }
+    return modifier(node)  // 最後に自分自身を変換（ボトムアップ）
+}
+```
+
+**quote/unquote でもマクロ展開でも、この Modify が中核**
+「ASTのどこかに条件を満たすノードがあったら置換する」パターンを汎用化
+
+---
+
+# 柱3: DefineMacros / ExpandMacros
+
+**定義フェーズ** — ASTからマクロ定義を抽出して環境に格納
+
+```javascript
+let unless = macro(condition, consequence, alternative) {
+    quote(if (!(unquote(condition))) {
+        unquote(consequence);
+    } else {
+        unquote(alternative);
+    });
+};
+```
+
+→ `unless` が `Macro` オブジェクトとしてマクロ環境に登録される
+→ この `let` 文は**ASTから削除**される（評価器には渡さない）
+
+---
+
+# マクロ展開の流れ
+
+**展開フェーズ** — マクロ呼び出しを展開後のASTに置換
+
+```javascript
+unless(10 > 5, puts("not greater"), puts("greater"));
+```
+
+```
+1. ast.Modify で CallExpression を走査
+2. "unless" がマクロ環境にある → マクロ呼び出しと判定
+3. 引数を評価せず Quote に包む:
+     condition   = Quote(10 > 5)
+     consequence = Quote(puts("not greater"))
+     alternative = Quote(puts("greater"))
+4. マクロ本体を評価 → unquote が引数のASTを埋め込む
+5. 結果のASTで元の呼び出し式を置換
+```
+
+展開結果:
+```javascript
+if (!(10 > 5)) { puts("not greater") } else { puts("greater") }
+```
+
+---
+
+# マクロ版 unless — 評価順序を追跡
+
+```javascript
+unless(true, puts("A"), puts("B"));
+```
+
+```
+Step 1: マクロ展開（評価の前に起きる。何も実行しない）
+        unless(true, puts("A"), puts("B"))
+        ↓ ASTを組み替えるだけ
+        if (!(true)) { puts("A") } else { puts("B") }
+
+Step 2: 展開後のASTを評価器が実行
+        !(true) → false
+        → else 側だけ実行 → puts("B") → 画面に "B" だけ出る
+```
+
+関数版との違い: `puts("A")` は**コードの断片として移動しただけ**で、
+`if` の条件が偽だから**一度も実行されない**
+
+---
+
+# マクロ展開のパイプライン（REPL）
+
+```go
+func Start(in io.Reader, out io.Writer) {
+    env := object.NewEnvironment()
+    macroEnv := object.NewEnvironment() // ← 付録で追加
+
+    for {
+        // ... 入力を読み取る ...
+        program := p.ParseProgram()
+
+        // マクロ定義を抽出し、呼び出しを展開する（付録で追加）
+        evaluator.DefineMacros(program, macroEnv)
+        expanded := evaluator.ExpandMacros(program, macroEnv)
+
+        // 展開後のASTを評価する
+        evaluated := evaluator.Eval(expanded, env)
+    }
+}
+```
+
+パーサーと評価器の間に**マクロ展開フェーズ**を挟むだけ
+→ 評価器はマクロの存在を知らなくてよい（疎結合）
+
+---
+
 # 現在の進捗
 
 | 章 | 内容 | 状態 |
@@ -646,6 +953,7 @@ Monkey言語にはfor/whileループがない → **再帰で繰り返しを表�
 | 第2章 | Parser / AST | 実装完了 |
 | 第3章 | Evaluator / Object / Environment | 実装完了 |
 | 第4章 | String / Array / Hash / Builtins | 実装完了 |
+| 付録 | マクロシステム（quote/unquote/Modify/展開） | 実装完了 |
 
 **全テスト通過**: `go test ./...` OK
 
@@ -719,6 +1027,20 @@ func TestNextToken(t *testing.T) {
 → **インターフェースによる拡張性**がGoの強み
 
 4章を通じて「3章の設計が良かったから簡単に拡張できた」と体感
+
+---
+
+# 学んだこと - メタプログラミングの力
+
+付録のマクロシステムで「**言語のユーザーが言語自体を拡張できる**」ことを体感
+
+- `unless` のような**新しい制御構造**をMonkeyコードだけで追加できる
+  （Go側のコードを触らずに！）
+- 関数では不可能なこと（引数の遅延評価）がマクロなら可能
+- **コードとデータの境界が曖昧になる** — Lispの哲学
+
+マクロ展開を「パーサーと評価器の間」に挟む設計は
+**既存の処理パイプラインを壊さずに新しいフェーズを追加**する好例
 
 ---
 
