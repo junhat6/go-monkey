@@ -1,20 +1,28 @@
+// Package lexer は Monkey言語の字句解析器（レキサー）を実装するパッケージ。
+// 入力文字列を1文字ずつ読み取り、トークン列に変換する。
 package lexer
 
 import "monkey/token"
 
+// Lexer は字句解析器の構造体。
+// input は解析対象の文字列、position は現在の文字位置、
+// readPosition は次に読む位置、ch は現在の文字。
 type Lexer struct {
 	input        string
-	position     int  // current position in input (points to current char)
-	readPosition int  // current reading position in input (after current char)
-	ch           byte // current char under examination
+	position     int  // 現在の文字のインデックス
+	readPosition int  // 次に読む文字のインデックス
+	ch           byte // 現在読んでいる文字
 }
 
+// New は入力文字列からレキサーを生成する。
 func New(input string) *Lexer {
 	l := &Lexer{input: input}
 	l.readChar()
 	return l
 }
 
+// NextToken は次のトークンを返す。
+// 空白をスキップし、現在の文字に応じて適切なトークンを生成する。
 func (l *Lexer) NextToken() token.Token {
 	var tok token.Token
 
@@ -53,6 +61,8 @@ func (l *Lexer) NextToken() token.Token {
 		tok = newToken(token.GT, l.ch)
 	case ';':
 		tok = newToken(token.SEMICOLON, l.ch)
+	case ':':
+		tok = newToken(token.COLON, l.ch)
 	case ',':
 		tok = newToken(token.COMMA, l.ch)
 	case '{':
@@ -63,6 +73,13 @@ func (l *Lexer) NextToken() token.Token {
 		tok = newToken(token.LPAREN, l.ch)
 	case ')':
 		tok = newToken(token.RPAREN, l.ch)
+	case '"':
+		tok.Type = token.STRING
+		tok.Literal = l.readString()
+	case '[':
+		tok = newToken(token.LBRACKET, l.ch)
+	case ']':
+		tok = newToken(token.RBRACKET, l.ch)
 	case 0:
 		tok.Literal = ""
 		tok.Type = token.EOF
@@ -84,12 +101,14 @@ func (l *Lexer) NextToken() token.Token {
 	return tok
 }
 
+// skipWhitespace は空白文字（スペース、タブ、改行）を読み飛ばす。
 func (l *Lexer) skipWhitespace() {
 	for l.ch == ' ' || l.ch == '\t' || l.ch == '\n' || l.ch == '\r' {
 		l.readChar()
 	}
 }
 
+// readChar は次の文字を読み込む。入力の末尾に達した場合は 0 をセットする。
 func (l *Lexer) readChar() {
 	if l.readPosition >= len(l.input) {
 		l.ch = 0
@@ -100,6 +119,7 @@ func (l *Lexer) readChar() {
 	l.readPosition += 1
 }
 
+// peekChar は次の文字を先読みする（位置は進めない）。
 func (l *Lexer) peekChar() byte {
 	if l.readPosition >= len(l.input) {
 		return 0
@@ -108,6 +128,7 @@ func (l *Lexer) peekChar() byte {
 	}
 }
 
+// readIdentifier は識別子（英字またはアンダースコアの連続）を読み取る。
 func (l *Lexer) readIdentifier() string {
 	position := l.position
 	for isLetter(l.ch) {
@@ -116,10 +137,24 @@ func (l *Lexer) readIdentifier() string {
 	return l.input[position:l.position]
 }
 
+// readNumber は数値（数字の連続）を読み取る。
 func (l *Lexer) readNumber() string {
 	position := l.position
 	for isDigit(l.ch) {
 		l.readChar()
+	}
+	return l.input[position:l.position]
+}
+
+// readString はダブルクォートで囲まれた文字列を読み取る。
+// 開始の " の次の文字から、終了の " の手前までを返す。
+func (l *Lexer) readString() string {
+	position := l.position + 1
+	for {
+		l.readChar()
+		if l.ch == '"' || l.ch == 0 {
+			break
+		}
 	}
 	return l.input[position:l.position]
 }

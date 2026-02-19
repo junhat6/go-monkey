@@ -2,6 +2,9 @@
 // パーサーがソースコードをトークン列から変換した結果がこのASTになる。
 // ASTの各ノードは Node インターフェースを実装し、
 // 文（Statement）と式（Expression）の2種類に大別される。
+//
+// 4章で追加: StringLiteral（文字列リテラル）、ArrayLiteral（配列リテラル）、
+// IndexExpression（インデックスアクセス）、HashLiteral（ハッシュリテラル）。
 package ast
 
 import (
@@ -321,6 +324,100 @@ func (ce *CallExpression) String() string {
 	out.WriteString("(")
 	out.WriteString(strings.Join(args, ", "))
 	out.WriteString(")")
+
+	return out.String()
+}
+
+// =====================
+// 4章で追加された式
+// =====================
+
+// StringLiteral は文字列リテラル（例: "hello world"）を表す。
+// Value にはクォートを除いた文字列の中身が格納される。
+type StringLiteral struct {
+	Token token.Token
+	Value string
+}
+
+func (sl *StringLiteral) expressionNode()      {}
+func (sl *StringLiteral) TokenLiteral() string { return sl.Token.Literal }
+func (sl *StringLiteral) String() string       { return sl.Token.Literal }
+
+// ArrayLiteral は配列リテラル `[<elements>]` を表す。
+// Elements は配列の要素となる式のリスト。
+// 例: [1, 2 * 2, 3 + 3]
+type ArrayLiteral struct {
+	Token    token.Token // '[' トークン
+	Elements []Expression
+}
+
+func (al *ArrayLiteral) expressionNode()      {}
+func (al *ArrayLiteral) TokenLiteral() string { return al.Token.Literal }
+
+// String は `[elem1, elem2, ...]` の形式で返す。
+func (al *ArrayLiteral) String() string {
+	var out bytes.Buffer
+
+	elements := []string{}
+	for _, el := range al.Elements {
+		elements = append(elements, el.String())
+	}
+
+	out.WriteString("[")
+	out.WriteString(strings.Join(elements, ", "))
+	out.WriteString("]")
+
+	return out.String()
+}
+
+// IndexExpression はインデックスアクセス式 `<left>[<index>]` を表す。
+// Left は配列やハッシュ、Index はインデックスとなる式。
+// 例: myArray[0], hash["key"]
+type IndexExpression struct {
+	Token token.Token // '[' トークン
+	Left  Expression
+	Index Expression
+}
+
+func (ie *IndexExpression) expressionNode()      {}
+func (ie *IndexExpression) TokenLiteral() string { return ie.Token.Literal }
+
+// String は `(<left>[<index>])` の形式で返す。
+func (ie *IndexExpression) String() string {
+	var out bytes.Buffer
+
+	out.WriteString("(")
+	out.WriteString(ie.Left.String())
+	out.WriteString("[")
+	out.WriteString(ie.Index.String())
+	out.WriteString("])")
+
+	return out.String()
+}
+
+// HashLiteral はハッシュリテラル `{<key>:<value>, ...}` を表す。
+// Pairs はキーと値の式のペアを格納するマップ。
+// 例: {"one": 1, "two": 2}, {true: 1, 2: "two"}
+type HashLiteral struct {
+	Token token.Token // '{' トークン
+	Pairs map[Expression]Expression
+}
+
+func (hl *HashLiteral) expressionNode()      {}
+func (hl *HashLiteral) TokenLiteral() string { return hl.Token.Literal }
+
+// String は `{key1:value1, key2:value2}` の形式で返す。
+func (hl *HashLiteral) String() string {
+	var out bytes.Buffer
+
+	pairs := []string{}
+	for key, value := range hl.Pairs {
+		pairs = append(pairs, key.String()+":"+value.String())
+	}
+
+	out.WriteString("{")
+	out.WriteString(strings.Join(pairs, ", "))
+	out.WriteString("}")
 
 	return out.String()
 }

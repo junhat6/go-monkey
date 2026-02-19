@@ -5,6 +5,10 @@
 // Pratt Parserの核心的なアイデア:
 // - 各トークンタイプに「前置解析関数」と「中置解析関数」を関連付ける
 // - 演算子の優先順位（precedence）に基づいて正しい構文木を構築する
+//
+// 4章で追加: INDEX優先順位、文字列リテラル・配列リテラル・インデックス式・
+// ハッシュリテラルのパース。parseCallArguments を parseExpressionList に
+// 汎用化（配列リテラルと関数呼び出しで共有）。
 package parser
 
 import (
@@ -18,6 +22,7 @@ import (
 // 演算子の優先順位を定数で定義する。
 // 数値が大きいほど優先順位が高い。
 // 例: * は + より優先順位が高いので、`1 + 2 * 3` は `1 + (2 * 3)` になる。
+// 4章で追加: INDEX（配列やハッシュのインデックスアクセス）が最も高い優先順位。
 const (
 	_ int = iota
 	LOWEST
@@ -27,10 +32,12 @@ const (
 	PRODUCT     // *
 	PREFIX      // -X または !X
 	CALL        // myFunction(X)
+	INDEX       // array[index]
 )
 
 // precedences はトークンタイプから優先順位への対応表。
 // この表に基づいてパーサーが演算子の結合順序を決定する。
+// 4章で追加: LBRACKET → INDEX（インデックスアクセスの優先順位）。
 var precedences = map[token.TokenType]int{
 	token.EQ:       EQUALS,
 	token.NOT_EQ:   EQUALS,
@@ -41,6 +48,7 @@ var precedences = map[token.TokenType]int{
 	token.SLASH:    PRODUCT,
 	token.ASTERISK: PRODUCT,
 	token.LPAREN:   CALL,
+	token.LBRACKET: INDEX,
 }
 
 // prefixParseFn は前置解析関数の型。
@@ -69,6 +77,12 @@ type Parser struct {
 // New はレキサーからパーサーを生成する。
 // 各トークンタイプに対して適切な解析関数を登録し、
 // 最初の2トークンを読み込んで curToken と peekToken をセットする。
+//
+// 4章で追加された登録:
+// - STRING → parseStringLiteral（文字列リテラル）
+// - LBRACKET → parseArrayLiteral（配列リテラル、前置）
+// - LBRACE → parseHashLiteral（ハッシュリテラル、前置）
+// - LBRACKET → parseIndexExpression（インデックスアクセス、中置）
 func New(l *lexer.Lexer) *Parser {
 	p := &Parser{
 		l:      l,
@@ -76,11 +90,10 @@ func New(l *lexer.Lexer) *Parser {
 	}
 
 	// 前置解析関数の登録
-	// 識別子、整数リテラル、前置演算子、真偽値、グループ化括弧、
-	// if式、関数リテラルをそれぞれ登録する
 	p.prefixParseFns = make(map[token.TokenType]prefixParseFn)
 	p.registerPrefix(token.IDENT, p.parseIdentifier)
 	p.registerPrefix(token.INT, p.parseIntegerLiteral)
+	p.registerPrefix(token.STRING, p.parseStringLiteral)
 	p.registerPrefix(token.BANG, p.parsePrefixExpression)
 	p.registerPrefix(token.MINUS, p.parsePrefixExpression)
 	p.registerPrefix(token.TRUE, p.parseBoolean)
@@ -88,9 +101,10 @@ func New(l *lexer.Lexer) *Parser {
 	p.registerPrefix(token.LPAREN, p.parseGroupedExpression)
 	p.registerPrefix(token.IF, p.parseIfExpression)
 	p.registerPrefix(token.FUNCTION, p.parseFunctionLiteral)
+	p.registerPrefix(token.LBRACKET, p.parseArrayLiteral)
+	p.registerPrefix(token.LBRACE, p.parseHashLiteral)
 
 	// 中置解析関数の登録
-	// 二項演算子（+, -, *, /, ==, !=, <, >）と関数呼び出しを登録する
 	p.infixParseFns = make(map[token.TokenType]infixParseFn)
 	p.registerInfix(token.PLUS, p.parseInfixExpression)
 	p.registerInfix(token.MINUS, p.parseInfixExpression)
@@ -103,6 +117,8 @@ func New(l *lexer.Lexer) *Parser {
 
 	// '(' は関数呼び出しの中置演算子として扱う（例: add(1, 2)）
 	p.registerInfix(token.LPAREN, p.parseCallExpression)
+	// '[' はインデックスアクセスの中置演算子として扱う（例: arr[0]）
+	p.registerInfix(token.LBRACKET, p.parseIndexExpression)
 
 	// curToken と peekToken の両方をセットするために2回読む
 	p.nextToken()
@@ -129,7 +145,6 @@ func (p *Parser) peekTokenIs(t token.TokenType) bool {
 
 // expectPeek は次のトークンが期待する型であればトークンを進めてtrueを返す。
 // 期待と違う場合はエラーを追加してfalseを返す。
-// これにより、構文上必ず来るべきトークンをアサートできる。
 func (p *Parser) expectPeek(t token.TokenType) bool {
 	if p.peekTokenIs(t) {
 		p.nextToken()
@@ -180,7 +195,6 @@ func (p *Parser) ParseProgram() *ast.Program {
 }
 
 // parseStatement は現在のトークンに応じて適切な種類の文をパースする。
-// let → LetStatement, return → ReturnStatement, それ以外 → ExpressionStatement
 func (p *Parser) parseStatement() ast.Statement {
 	switch p.curToken.Type {
 	case token.LET:
@@ -196,24 +210,20 @@ func (p *Parser) parseStatement() ast.Statement {
 func (p *Parser) parseLetStatement() *ast.LetStatement {
 	stmt := &ast.LetStatement{Token: p.curToken}
 
-	// let の次は識別子が来なければならない
 	if !p.expectPeek(token.IDENT) {
 		return nil
 	}
 
 	stmt.Name = &ast.Identifier{Token: p.curToken, Value: p.curToken.Literal}
 
-	// 識別子の次は = が来なければならない
 	if !p.expectPeek(token.ASSIGN) {
 		return nil
 	}
 
-	// = の次の式をパースする
 	p.nextToken()
 
 	stmt.Value = p.parseExpression(LOWEST)
 
-	// セミコロンは省略可能
 	if p.peekTokenIs(token.SEMICOLON) {
 		p.nextToken()
 	}
@@ -229,7 +239,6 @@ func (p *Parser) parseReturnStatement() *ast.ReturnStatement {
 
 	stmt.ReturnValue = p.parseExpression(LOWEST)
 
-	// セミコロンは省略可能
 	if p.peekTokenIs(token.SEMICOLON) {
 		p.nextToken()
 	}
@@ -238,13 +247,11 @@ func (p *Parser) parseReturnStatement() *ast.ReturnStatement {
 }
 
 // parseExpressionStatement は式だけからなる文をパースする。
-// Monkey言語では `x + 10;` のように式を文として書ける。
 func (p *Parser) parseExpressionStatement() *ast.ExpressionStatement {
 	stmt := &ast.ExpressionStatement{Token: p.curToken}
 
 	stmt.Expression = p.parseExpression(LOWEST)
 
-	// セミコロンは省略可能
 	if p.peekTokenIs(token.SEMICOLON) {
 		p.nextToken()
 	}
@@ -260,13 +267,6 @@ func (p *Parser) parseExpressionStatement() *ast.ExpressionStatement {
 // 1. まず現在のトークンに対応する前置解析関数を呼んで左辺の式を得る
 // 2. 次のトークンの優先順位が現在の優先順位より高い間、
 //    中置解析関数を呼んで左辺に演算子と右辺を結合していく
-//
-// 例: `1 + 2 * 3` の場合
-//   - 前置関数で 1 を取得
-//   - + の優先順位(SUM) > 引数の優先順位(LOWEST) なので、中置関数で (1 + ...) を構築
-//   - 中置関数内で parseExpression(SUM) を再帰呼び出し
-//   - 2 を前置関数で取得し、* の優先順位(PRODUCT) > SUM なので (2 * 3) を構築
-//   - 結果: (1 + (2 * 3))
 func (p *Parser) parseExpression(precedence int) ast.Expression {
 	prefix := p.prefixParseFns[p.curToken.Type]
 	if prefix == nil {
@@ -275,7 +275,6 @@ func (p *Parser) parseExpression(precedence int) ast.Expression {
 	}
 	leftExp := prefix()
 
-	// 次のトークンがセミコロンでなく、かつ優先順位が引数より高い間ループ
 	for !p.peekTokenIs(token.SEMICOLON) && precedence < p.peekPrecedence() {
 		infix := p.infixParseFns[p.peekToken.Type]
 		if infix == nil {
@@ -334,8 +333,15 @@ func (p *Parser) parseIntegerLiteral() ast.Expression {
 	return lit
 }
 
+// parseStringLiteral は文字列リテラルをパースする。
+// レキサーがクォートを除いた文字列をLiteralに格納済みなので、
+// そのまま StringLiteral ノードを生成する。
+// 4章で追加。
+func (p *Parser) parseStringLiteral() ast.Expression {
+	return &ast.StringLiteral{Token: p.curToken, Value: p.curToken.Literal}
+}
+
 // parsePrefixExpression は前置演算子式（!x, -5 など）をパースする。
-// 現在のトークン（演算子）を記録し、次のトークンに進んで右辺の式をパースする。
 func (p *Parser) parsePrefixExpression() ast.Expression {
 	expression := &ast.PrefixExpression{
 		Token:    p.curToken,
@@ -344,14 +350,12 @@ func (p *Parser) parsePrefixExpression() ast.Expression {
 
 	p.nextToken()
 
-	// PREFIX 優先順位で右辺をパース
 	expression.Right = p.parseExpression(PREFIX)
 
 	return expression
 }
 
 // parseInfixExpression は中置演算子式（5 + 10 など）をパースする。
-// 左辺は引数として受け取り、現在のトークン（演算子）の優先順位で右辺をパースする。
 func (p *Parser) parseInfixExpression(left ast.Expression) ast.Expression {
 	expression := &ast.InfixExpression{
 		Token:    p.curToken,
@@ -372,7 +376,6 @@ func (p *Parser) parseBoolean() ast.Expression {
 }
 
 // parseGroupedExpression は括弧で囲まれた式 `(expression)` をパースする。
-// 括弧はグループ化のためだけに使われ、AST上には残らない。
 func (p *Parser) parseGroupedExpression() ast.Expression {
 	p.nextToken()
 
@@ -389,7 +392,6 @@ func (p *Parser) parseGroupedExpression() ast.Expression {
 func (p *Parser) parseIfExpression() ast.Expression {
 	expression := &ast.IfExpression{Token: p.curToken}
 
-	// if の後ろに ( が来なければならない
 	if !p.expectPeek(token.LPAREN) {
 		return nil
 	}
@@ -397,19 +399,16 @@ func (p *Parser) parseIfExpression() ast.Expression {
 	p.nextToken()
 	expression.Condition = p.parseExpression(LOWEST)
 
-	// 条件式の後に ) が来なければならない
 	if !p.expectPeek(token.RPAREN) {
 		return nil
 	}
 
-	// ) の後に { が来なければならない（consequence ブロック）
 	if !p.expectPeek(token.LBRACE) {
 		return nil
 	}
 
 	expression.Consequence = p.parseBlockStatement()
 
-	// else節がある場合
 	if p.peekTokenIs(token.ELSE) {
 		p.nextToken()
 
@@ -424,7 +423,6 @@ func (p *Parser) parseIfExpression() ast.Expression {
 }
 
 // parseBlockStatement は `{ ... }` 内の文をパースする。
-// '}' または EOF に到達するまで文をパースし続ける。
 func (p *Parser) parseBlockStatement() *ast.BlockStatement {
 	block := &ast.BlockStatement{Token: p.curToken}
 	block.Statements = []ast.Statement{}
@@ -446,14 +444,12 @@ func (p *Parser) parseBlockStatement() *ast.BlockStatement {
 func (p *Parser) parseFunctionLiteral() ast.Expression {
 	lit := &ast.FunctionLiteral{Token: p.curToken}
 
-	// fn の後に ( が来なければならない
 	if !p.expectPeek(token.LPAREN) {
 		return nil
 	}
 
 	lit.Parameters = p.parseFunctionParameters()
 
-	// パラメータリストの後に { が来なければならない
 	if !p.expectPeek(token.LBRACE) {
 		return nil
 	}
@@ -467,22 +463,19 @@ func (p *Parser) parseFunctionLiteral() ast.Expression {
 func (p *Parser) parseFunctionParameters() []*ast.Identifier {
 	identifiers := []*ast.Identifier{}
 
-	// パラメータが0個の場合: fn() { ... }
 	if p.peekTokenIs(token.RPAREN) {
 		p.nextToken()
 		return identifiers
 	}
 
-	// 最初のパラメータ
 	p.nextToken()
 
 	ident := &ast.Identifier{Token: p.curToken, Value: p.curToken.Literal}
 	identifiers = append(identifiers, ident)
 
-	// カンマ区切りで残りのパラメータを読む
 	for p.peekTokenIs(token.COMMA) {
-		p.nextToken() // カンマを飛ばす
-		p.nextToken() // 次のパラメータへ
+		p.nextToken()
+		p.nextToken()
 		ident := &ast.Identifier{Token: p.curToken, Value: p.curToken.Literal}
 		identifiers = append(identifiers, ident)
 	}
@@ -495,39 +488,106 @@ func (p *Parser) parseFunctionParameters() []*ast.Identifier {
 }
 
 // parseCallExpression は関数呼び出し `<expression>(<args>)` をパースする。
-// 左辺の式（関数）を引数として受け取り、引数リストをパースする。
+// 4章で変更: parseCallArguments → parseExpressionList を使うように汎用化。
 func (p *Parser) parseCallExpression(function ast.Expression) ast.Expression {
 	exp := &ast.CallExpression{Token: p.curToken, Function: function}
-	exp.Arguments = p.parseCallArguments()
+	exp.Arguments = p.parseExpressionList(token.RPAREN)
 	return exp
 }
 
-// parseCallArguments は関数呼び出しの引数リスト `(a, b, c)` をパースする。
-func (p *Parser) parseCallArguments() []ast.Expression {
-	args := []ast.Expression{}
+// parseExpressionList はカンマ区切りの式リストをパースする汎用関数。
+// end で指定したトークンが来るまで式を読み続ける。
+// 関数呼び出しの引数リスト `(a, b, c)` と
+// 配列リテラルの要素リスト `[1, 2, 3]` の両方で使われる。
+// 4章で追加（3章の parseCallArguments を汎用化したもの）。
+func (p *Parser) parseExpressionList(end token.TokenType) []ast.Expression {
+	list := []ast.Expression{}
 
-	// 引数が0個の場合: add()
-	if p.peekTokenIs(token.RPAREN) {
+	// 要素が0個の場合
+	if p.peekTokenIs(end) {
 		p.nextToken()
-		return args
+		return list
 	}
 
-	// 最初の引数
+	// 最初の要素
 	p.nextToken()
-	args = append(args, p.parseExpression(LOWEST))
+	list = append(list, p.parseExpression(LOWEST))
 
-	// カンマ区切りで残りの引数を読む
+	// カンマ区切りで残りの要素を読む
 	for p.peekTokenIs(token.COMMA) {
-		p.nextToken() // カンマを飛ばす
-		p.nextToken() // 次の引数へ
-		args = append(args, p.parseExpression(LOWEST))
+		p.nextToken()
+		p.nextToken()
+		list = append(list, p.parseExpression(LOWEST))
 	}
 
-	if !p.expectPeek(token.RPAREN) {
+	if !p.expectPeek(end) {
 		return nil
 	}
 
-	return args
+	return list
+}
+
+// parseArrayLiteral は配列リテラル `[<elements>]` をパースする。
+// parseExpressionList を使って要素リストを読み取る。
+// 4章で追加。
+func (p *Parser) parseArrayLiteral() ast.Expression {
+	array := &ast.ArrayLiteral{Token: p.curToken}
+
+	array.Elements = p.parseExpressionList(token.RBRACKET)
+
+	return array
+}
+
+// parseIndexExpression はインデックスアクセス式 `<left>[<index>]` をパースする。
+// 配列アクセス（arr[0]）やハッシュアクセス（hash["key"]）で使われる。
+// 中置解析関数として登録され、左辺（配列やハッシュ）を引数に取る。
+// 4章で追加。
+func (p *Parser) parseIndexExpression(left ast.Expression) ast.Expression {
+	exp := &ast.IndexExpression{Token: p.curToken, Left: left}
+
+	p.nextToken()
+	exp.Index = p.parseExpression(LOWEST)
+
+	if !p.expectPeek(token.RBRACKET) {
+		return nil
+	}
+
+	return exp
+}
+
+// parseHashLiteral はハッシュリテラル `{<key>:<value>, ...}` をパースする。
+// キーは任意の式（文字列、整数、ブーリアン等）、値も任意の式。
+// 4章で追加。
+func (p *Parser) parseHashLiteral() ast.Expression {
+	hash := &ast.HashLiteral{Token: p.curToken}
+	hash.Pairs = make(map[ast.Expression]ast.Expression)
+
+	// '}' が来るまでキーと値のペアを読み続ける
+	for !p.peekTokenIs(token.RBRACE) {
+		p.nextToken()
+		key := p.parseExpression(LOWEST)
+
+		// キーの後に ':' が来なければならない
+		if !p.expectPeek(token.COLON) {
+			return nil
+		}
+
+		p.nextToken()
+		value := p.parseExpression(LOWEST)
+
+		hash.Pairs[key] = value
+
+		// '}' でなければ ',' が来なければならない
+		if !p.peekTokenIs(token.RBRACE) && !p.expectPeek(token.COMMA) {
+			return nil
+		}
+	}
+
+	if !p.expectPeek(token.RBRACE) {
+		return nil
+	}
+
+	return hash
 }
 
 // registerPrefix は前置解析関数を登録するヘルパー。

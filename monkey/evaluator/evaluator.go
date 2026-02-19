@@ -2,8 +2,9 @@
 // ASTを再帰的にたどりながら（tree-walking）、各ノードを評価して
 // object.Object としての結果を返す。
 //
-// これはインタプリタの核心部分であり、パーサーが構築したASTを
-// 実際に「実行」する役割を担う。
+// 4章で追加: 文字列リテラル・配列リテラル・インデックス式・ハッシュリテラルの評価、
+// 文字列の連結（+演算子）、組み込み関数のサポート、
+// 配列/ハッシュのインデックスアクセス。
 package evaluator
 
 import (
@@ -24,6 +25,12 @@ var (
 // Eval はASTノードを評価してオブジェクトを返す、評価器のメイン関数。
 // ノードの型に応じたswitch文で処理を分岐する。
 // 全ての評価はこの関数を通じて再帰的に行われる。
+//
+// 4章で追加された分岐:
+// - StringLiteral: 文字列リテラルの評価
+// - ArrayLiteral: 配列リテラルの評価
+// - IndexExpression: インデックスアクセスの評価
+// - HashLiteral: ハッシュリテラルの評価
 func Eval(node ast.Node, env *object.Environment) object.Object {
 	switch node := node.(type) {
 
@@ -42,7 +49,6 @@ func Eval(node ast.Node, env *object.Environment) object.Object {
 		return Eval(node.Expression, env)
 
 	// ReturnStatement: 戻り値を評価し、ReturnValueでラップする
-	// これにより呼び出しスタックを巻き戻せる
 	case *ast.ReturnStatement:
 		val := Eval(node.ReturnValue, env)
 		if isError(val) {
@@ -63,6 +69,10 @@ func Eval(node ast.Node, env *object.Environment) object.Object {
 	// IntegerLiteral: 整数リテラルをIntegerオブジェクトに変換
 	case *ast.IntegerLiteral:
 		return &object.Integer{Value: node.Value}
+
+	// StringLiteral: 文字列リテラルをStringオブジェクトに変換（4章で追加）
+	case *ast.StringLiteral:
+		return &object.String{Value: node.Value}
 
 	// Boolean: 真偽値をシングルトンのBooleanオブジェクトに変換
 	case *ast.Boolean:
@@ -94,12 +104,11 @@ func Eval(node ast.Node, env *object.Environment) object.Object {
 	case *ast.IfExpression:
 		return evalIfExpression(node, env)
 
-	// Identifier: 環境から変数の値を取得する
+	// Identifier: 環境から変数の値を取得する（組み込み関数も検索）
 	case *ast.Identifier:
 		return evalIdentifier(node, env)
 
 	// FunctionLiteral: 関数オブジェクトを生成する（クロージャ）
-	// 定義時の環境を保持することがクロージャのポイント
 	case *ast.FunctionLiteral:
 		params := node.Parameters
 		body := node.Body
@@ -107,20 +116,43 @@ func Eval(node ast.Node, env *object.Environment) object.Object {
 
 	// CallExpression: 関数呼び出しを評価する
 	case *ast.CallExpression:
-		// まず関数自体を評価する
 		function := Eval(node.Function, env)
 		if isError(function) {
 			return function
 		}
 
-		// 引数を左から右に評価する
 		args := evalExpressions(node.Arguments, env)
 		if len(args) == 1 && isError(args[0]) {
 			return args[0]
 		}
 
-		// 関数を適用する
 		return applyFunction(function, args)
+
+	// ArrayLiteral: 配列リテラルの要素を評価し、Arrayオブジェクトを生成（4章で追加）
+	case *ast.ArrayLiteral:
+		elements := evalExpressions(node.Elements, env)
+		if len(elements) == 1 && isError(elements[0]) {
+			return elements[0]
+		}
+		return &object.Array{Elements: elements}
+
+	// IndexExpression: インデックスアクセスを評価する（4章で追加）
+	// 左辺（配列/ハッシュ）とインデックスを評価し、要素を取得
+	case *ast.IndexExpression:
+		left := Eval(node.Left, env)
+		if isError(left) {
+			return left
+		}
+		index := Eval(node.Index, env)
+		if isError(index) {
+			return index
+		}
+		return evalIndexExpression(left, index)
+
+	// HashLiteral: ハッシュリテラルを評価する（4章で追加）
+	case *ast.HashLiteral:
+		return evalHashLiteral(node, env)
+
 	}
 
 	return nil
@@ -128,7 +160,6 @@ func Eval(node ast.Node, env *object.Environment) object.Object {
 
 // evalProgram はプログラム全体（文のリスト）を評価する。
 // 各文を順に評価し、ReturnValueまたはErrorに遭遇したら即座に返す。
-// ReturnValueの場合は中身を取り出して返す（プログラムレベルではアンラップ）。
 func evalProgram(program *ast.Program, env *object.Environment) object.Object {
 	var result object.Object
 
@@ -148,8 +179,6 @@ func evalProgram(program *ast.Program, env *object.Environment) object.Object {
 
 // evalBlockStatement はブロック内の文を評価する。
 // evalProgram との違い: ReturnValueをアンラップしない。
-// これにより、ネストされたブロックからのreturnが正しく伝播する。
-// 例: if (true) { if (true) { return 10; } return 1; } → 10
 func evalBlockStatement(
 	block *ast.BlockStatement,
 	env *object.Environment,
@@ -161,7 +190,6 @@ func evalBlockStatement(
 
 		if result != nil {
 			rt := result.Type()
-			// ReturnValueまたはErrorならそのまま返す（アンラップしない）
 			if rt == object.RETURN_VALUE_OBJ || rt == object.ERROR_OBJ {
 				return result
 			}
@@ -196,7 +224,6 @@ func evalPrefixExpression(operator string, right object.Object) object.Object {
 }
 
 // evalBangOperatorExpression は ! 演算子を評価する。
-// !true → false, !false → true, !null → true, それ以外 → false
 func evalBangOperatorExpression(right object.Object) object.Object {
 	switch right {
 	case TRUE:
@@ -206,13 +233,11 @@ func evalBangOperatorExpression(right object.Object) object.Object {
 	case NULL:
 		return TRUE
 	default:
-		// 整数値など、truthyな値に対して ! を適用すると false になる
 		return FALSE
 	}
 }
 
 // evalMinusPrefixOperatorExpression は - 前置演算子を評価する。
-// 整数にのみ適用可能。-5 は 5 の符号を反転させる。
 func evalMinusPrefixOperatorExpression(right object.Object) object.Object {
 	if right.Type() != object.INTEGER_OBJ {
 		return newError("unknown operator: -%s", right.Type())
@@ -227,21 +252,21 @@ func evalMinusPrefixOperatorExpression(right object.Object) object.Object {
 // =====================
 
 // evalInfixExpression は中置演算子式を評価する。
-// 両辺の型に応じて処理を分岐する。
+// 4章で追加: 文字列同士の場合は evalStringInfixExpression に分岐。
 func evalInfixExpression(
 	operator string,
 	left, right object.Object,
 ) object.Object {
 	switch {
-	// 両辺が整数の場合: 算術演算・比較演算
 	case left.Type() == object.INTEGER_OBJ && right.Type() == object.INTEGER_OBJ:
 		return evalIntegerInfixExpression(operator, left, right)
-	// == と != はポインタ比較（シングルトンなので正しく動く）
+	// 4章で追加: 文字列同士の演算（連結 "hello" + " world"）
+	case left.Type() == object.STRING_OBJ && right.Type() == object.STRING_OBJ:
+		return evalStringInfixExpression(operator, left, right)
 	case operator == "==":
 		return nativeBoolToBooleanObject(left == right)
 	case operator == "!=":
 		return nativeBoolToBooleanObject(left != right)
-	// 型が異なる場合（例: INTEGER + BOOLEAN）
 	case left.Type() != right.Type():
 		return newError("type mismatch: %s %s %s",
 			left.Type(), operator, right.Type())
@@ -252,7 +277,6 @@ func evalInfixExpression(
 }
 
 // evalIntegerInfixExpression は整数同士の中置演算を評価する。
-// 四則演算（+, -, *, /）と比較演算（<, >, ==, !=）をサポート。
 func evalIntegerInfixExpression(
 	operator string,
 	left, right object.Object,
@@ -283,13 +307,28 @@ func evalIntegerInfixExpression(
 	}
 }
 
+// evalStringInfixExpression は文字列同士の中置演算を評価する。
+// 現在は + 演算子（文字列連結）のみサポート。
+// 4章で追加。
+func evalStringInfixExpression(
+	operator string,
+	left, right object.Object,
+) object.Object {
+	if operator != "+" {
+		return newError("unknown operator: %s %s %s",
+			left.Type(), operator, right.Type())
+	}
+
+	leftVal := left.(*object.String).Value
+	rightVal := right.(*object.String).Value
+	return &object.String{Value: leftVal + rightVal}
+}
+
 // =====================
 // if式の評価
 // =====================
 
 // evalIfExpression は if式を評価する。
-// 条件がtruthyならConsequenceを、falsyでAlternativeがあればAlternativeを評価する。
-// どちらにも当てはまらなければNULLを返す。
 func evalIfExpression(
 	ie *ast.IfExpression,
 	env *object.Environment,
@@ -313,17 +352,22 @@ func evalIfExpression(
 // =====================
 
 // evalIdentifier は識別子（変数名）を評価する。
-// 環境から変数の値を検索し、見つからなければエラーを返す。
+// まずユーザー定義の変数を検索し、見つからなければ組み込み関数を検索する。
+// どちらにもなければエラーを返す。
+// 4章で変更: 組み込み関数（builtins）の検索を追加。
 func evalIdentifier(
 	node *ast.Identifier,
 	env *object.Environment,
 ) object.Object {
-	val, ok := env.Get(node.Value)
-	if !ok {
-		return newError("identifier not found: %s", node.Value)
+	if val, ok := env.Get(node.Value); ok {
+		return val
 	}
 
-	return val
+	if builtin, ok := builtins[node.Value]; ok {
+		return builtin
+	}
+
+	return newError("identifier not found: %s", node.Value)
 }
 
 // =====================
@@ -331,7 +375,6 @@ func evalIdentifier(
 // =====================
 
 // isTruthy はオブジェクトが「真」とみなされるか判定する。
-// Monkey言語では: null → false, false → false, それ以外 → true
 func isTruthy(obj object.Object) bool {
 	switch obj {
 	case NULL:
@@ -341,7 +384,6 @@ func isTruthy(obj object.Object) bool {
 	case FALSE:
 		return false
 	default:
-		// 整数値などは全てtruthy
 		return true
 	}
 }
@@ -352,7 +394,6 @@ func newError(format string, a ...interface{}) *object.Error {
 }
 
 // isError はオブジェクトがエラーかどうか判定する。
-// 各評価関数でエラーチェックに使用し、エラーの伝播を実現する。
 func isError(obj object.Object) bool {
 	if obj != nil {
 		return obj.Type() == object.ERROR_OBJ
@@ -365,7 +406,6 @@ func isError(obj object.Object) bool {
 // =====================
 
 // evalExpressions は式のリスト（関数引数など）を左から右に評価する。
-// 途中でエラーが発生したら、エラーだけを含むスライスを返す。
 func evalExpressions(
 	exps []ast.Expression,
 	env *object.Environment,
@@ -384,24 +424,25 @@ func evalExpressions(
 }
 
 // applyFunction は関数オブジェクトに引数を適用して実行する。
-// 1. 関数の定義時環境を外側スコープとする新しい環境を作成
-// 2. 引数をパラメータ名に束縛
-// 3. 関数本体を新しい環境で評価
-// 4. ReturnValueをアンラップして結果を返す
+// 4章で変更: switch文でユーザー定義関数（Function）と組み込み関数（Builtin）を
+// 区別して処理するようになった。
 func applyFunction(fn object.Object, args []object.Object) object.Object {
-	function, ok := fn.(*object.Function)
-	if !ok {
+	switch fn := fn.(type) {
+
+	case *object.Function:
+		extendedEnv := extendFunctionEnv(fn, args)
+		evaluated := Eval(fn.Body, extendedEnv)
+		return unwrapReturnValue(evaluated)
+
+	case *object.Builtin:
+		return fn.Fn(args...)
+
+	default:
 		return newError("not a function: %s", fn.Type())
 	}
-
-	extendedEnv := extendFunctionEnv(function, args)
-	evaluated := Eval(function.Body, extendedEnv)
-	return unwrapReturnValue(evaluated)
 }
 
 // extendFunctionEnv は関数呼び出し用の新しい環境を作成する。
-// 関数の定義時環境を外側として、引数をパラメータ名に束縛する。
-// これがクロージャの仕組みの核心部分。
 func extendFunctionEnv(
 	fn *object.Function,
 	args []object.Object,
@@ -416,12 +457,100 @@ func extendFunctionEnv(
 }
 
 // unwrapReturnValue はReturnValueオブジェクトの中身を取り出す。
-// 関数の本体評価後に呼ばれ、ReturnValueのラップを外して値だけを返す。
-// これにより、returnが関数の外側まで伝播しないようにする。
 func unwrapReturnValue(obj object.Object) object.Object {
 	if returnValue, ok := obj.(*object.ReturnValue); ok {
 		return returnValue.Value
 	}
 
 	return obj
+}
+
+// =====================
+// インデックスアクセス（4章で追加）
+// =====================
+
+// evalIndexExpression はインデックスアクセス式を評価する。
+// 左辺の型に応じて配列アクセスとハッシュアクセスを分岐する。
+// 4章で追加。
+func evalIndexExpression(left, index object.Object) object.Object {
+	switch {
+	case left.Type() == object.ARRAY_OBJ && index.Type() == object.INTEGER_OBJ:
+		return evalArrayIndexExpression(left, index)
+	case left.Type() == object.HASH_OBJ:
+		return evalHashIndexExpression(left, index)
+	default:
+		return newError("index operator not supported: %s", left.Type())
+	}
+}
+
+// evalArrayIndexExpression は配列のインデックスアクセスを評価する。
+// 範囲外アクセスの場合はNULLを返す（エラーにはしない）。
+// 4章で追加。
+func evalArrayIndexExpression(array, index object.Object) object.Object {
+	arrayObject := array.(*object.Array)
+	idx := index.(*object.Integer).Value
+	max := int64(len(arrayObject.Elements) - 1)
+
+	if idx < 0 || idx > max {
+		return NULL
+	}
+
+	return arrayObject.Elements[idx]
+}
+
+// =====================
+// ハッシュ（4章で追加）
+// =====================
+
+// evalHashLiteral はハッシュリテラルを評価する。
+// 各キーと値のペアを評価し、キーが Hashable インターフェースを
+// 実装しているか確認してからハッシュに格納する。
+// 4章で追加。
+func evalHashLiteral(
+	node *ast.HashLiteral,
+	env *object.Environment,
+) object.Object {
+	pairs := make(map[object.HashKey]object.HashPair)
+
+	for keyNode, valueNode := range node.Pairs {
+		key := Eval(keyNode, env)
+		if isError(key) {
+			return key
+		}
+
+		// キーが Hashable でなければエラー（例: 関数をキーにはできない）
+		hashKey, ok := key.(object.Hashable)
+		if !ok {
+			return newError("unusable as hash key: %s", key.Type())
+		}
+
+		value := Eval(valueNode, env)
+		if isError(value) {
+			return value
+		}
+
+		hashed := hashKey.HashKey()
+		pairs[hashed] = object.HashPair{Key: key, Value: value}
+	}
+
+	return &object.Hash{Pairs: pairs}
+}
+
+// evalHashIndexExpression はハッシュのインデックスアクセスを評価する。
+// キーが Hashable でなければエラー、キーが存在しなければNULLを返す。
+// 4章で追加。
+func evalHashIndexExpression(hash, index object.Object) object.Object {
+	hashObject := hash.(*object.Hash)
+
+	key, ok := index.(object.Hashable)
+	if !ok {
+		return newError("unusable as hash key: %s", index.Type())
+	}
+
+	pair, ok := hashObject.Pairs[key.HashKey()]
+	if !ok {
+		return NULL
+	}
+
+	return pair.Value
 }
