@@ -18,10 +18,16 @@ const PROMPT = ">> "
 // Start はREPLを起動する。
 // 入力ストリームからコードを1行ずつ読み取り、評価結果を出力ストリームに書き出す。
 // 環境（env）をループ全体で共有することで、変数束縛がセッション中持続する。
+//
+// 付録で追加: マクロ環境（macroEnv）を追加し、パーサーと評価器の間に
+// マクロ定義・展開ステップを挟む。
+// パイプライン: Parser → DefineMacros → ExpandMacros → Evaluator
 func Start(in io.Reader, out io.Writer) {
 	scanner := bufio.NewScanner(in)
 	// 環境をループの外で作成し、変数をセッション間で保持する
 	env := object.NewEnvironment()
+	// マクロ環境もセッション全体で保持する（付録で追加）
+	macroEnv := object.NewEnvironment()
 
 	for {
 		fmt.Fprintf(out, PROMPT)
@@ -41,8 +47,12 @@ func Start(in io.Reader, out io.Writer) {
 			continue
 		}
 
-		// ASTを評価器に渡して実行結果を得る
-		evaluated := evaluator.Eval(program, env)
+		// マクロ定義を抽出し、マクロ呼び出しを展開する（付録で追加）
+		evaluator.DefineMacros(program, macroEnv)
+		expanded := evaluator.ExpandMacros(program, macroEnv)
+
+		// 展開後のASTを評価器に渡して実行結果を得る
+		evaluated := evaluator.Eval(expanded, env)
 		if evaluated != nil {
 			io.WriteString(out, evaluated.Inspect())
 			io.WriteString(out, "\n")

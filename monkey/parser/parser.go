@@ -103,6 +103,7 @@ func New(l *lexer.Lexer) *Parser {
 	p.registerPrefix(token.FUNCTION, p.parseFunctionLiteral)
 	p.registerPrefix(token.LBRACKET, p.parseArrayLiteral)
 	p.registerPrefix(token.LBRACE, p.parseHashLiteral)
+	p.registerPrefix(token.MACRO, p.parseMacroLiteral)
 
 	// 中置解析関数の登録
 	p.infixParseFns = make(map[token.TokenType]infixParseFn)
@@ -553,6 +554,27 @@ func (p *Parser) parseIndexExpression(left ast.Expression) ast.Expression {
 	}
 
 	return exp
+}
+
+// parseMacroLiteral はマクロリテラル `macro(<params>) <body>` をパースする。
+// FunctionLiteral と同じ構造を持つが、トークンが macro である。
+// 付録で追加。
+func (p *Parser) parseMacroLiteral() ast.Expression {
+	lit := &ast.MacroLiteral{Token: p.curToken}
+
+	if !p.expectPeek(token.LPAREN) {
+		return nil
+	}
+
+	lit.Parameters = p.parseFunctionParameters()
+
+	if !p.expectPeek(token.LBRACE) {
+		return nil
+	}
+
+	lit.Body = p.parseBlockStatement()
+
+	return lit
 }
 
 // parseHashLiteral はハッシュリテラル `{<key>:<value>, ...}` をパースする。

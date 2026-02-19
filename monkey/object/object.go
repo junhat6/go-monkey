@@ -41,6 +41,9 @@ const (
 
 	ARRAY_OBJ = "ARRAY" // 配列
 	HASH_OBJ  = "HASH"  // ハッシュ（連想配列）
+
+	QUOTE_OBJ = "QUOTE" // quote（ASTノードをデータとして保持）（付録で追加）
+	MACRO_OBJ = "MACRO" // マクロ（付録で追加）
 )
 
 // HashKey はハッシュのキーとして使うための構造体。
@@ -238,6 +241,53 @@ func (h *Hash) Inspect() string {
 	out.WriteString("{")
 	out.WriteString(strings.Join(pairs, ", "))
 	out.WriteString("}")
+
+	return out.String()
+}
+
+// =====================
+// 付録で追加されたオブジェクト
+// =====================
+
+// Quote はASTノードをデータとして保持するオブジェクト。
+// quote() 関数で生成され、コードをデータとして扱うために使う。
+// 付録で追加。
+type Quote struct {
+	Node ast.Node
+}
+
+func (q *Quote) Type() ObjectType { return QUOTE_OBJ }
+func (q *Quote) Inspect() string {
+	return "QUOTE(" + q.Node.String() + ")"
+}
+
+// Macro はマクロオブジェクト。
+// ユーザー定義関数と同じくパラメータ、本体、環境を持つが、
+// 呼び出し時に引数を評価せず、ASTノードをそのまま受け取る。
+// 付録で追加。
+type Macro struct {
+	Parameters []*ast.Identifier
+	Body       *ast.BlockStatement
+	Env        *Environment
+}
+
+func (m *Macro) Type() ObjectType { return MACRO_OBJ }
+
+// Inspect はマクロの文字列表現を返す。
+func (m *Macro) Inspect() string {
+	var out bytes.Buffer
+
+	params := []string{}
+	for _, p := range m.Parameters {
+		params = append(params, p.String())
+	}
+
+	out.WriteString("macro")
+	out.WriteString("(")
+	out.WriteString(strings.Join(params, ", "))
+	out.WriteString(") {\n")
+	out.WriteString(m.Body.String())
+	out.WriteString("\n}")
 
 	return out.String()
 }

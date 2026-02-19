@@ -11,6 +11,7 @@ import (
 	"fmt"
 	"monkey/ast"
 	"monkey/object"
+	"monkey/token"
 )
 
 // シングルトンオブジェクト。
@@ -115,7 +116,12 @@ func Eval(node ast.Node, env *object.Environment) object.Object {
 		return &object.Function{Parameters: params, Env: env, Body: body}
 
 	// CallExpression: 関数呼び出しを評価する
+	// 付録で追加: quote() は特別扱い（引数を評価しない）
 	case *ast.CallExpression:
+		if node.Function.TokenLiteral() == "quote" {
+			return quote(node.Arguments[0], env)
+		}
+
 		function := Eval(node.Function, env)
 		if isError(function) {
 			return function
@@ -553,4 +559,79 @@ func evalHashIndexExpression(hash, index object.Object) object.Object {
 	}
 
 	return pair.Value
+}
+
+// =====================
+// quote/unquote（付録で追加）
+// =====================
+
+// quote はASTノードを評価せずにデータとして保持する。
+// 内部で unquote() 呼び出しがあれば、その部分だけ評価して結果のASTノードに置換する。
+// 付録で追加。
+func quote(node ast.Node, env *object.Environment) object.Object {
+	node = evalUnquoteCalls(node, env)
+	return &object.Quote{Node: node}
+}
+
+// evalUnquoteCalls は quote されたAST内の unquote() 呼び出しを見つけて評価する。
+// ast.Modify を使ってASTを走査し、unquote() の引数を評価した結果で置換する。
+// 付録で追加。
+func evalUnquoteCalls(quoted ast.Node, env *object.Environment) ast.Node {
+	return ast.Modify(quoted, func(node ast.Node) ast.Node {
+		if !isUnquoteCall(node) {
+			return node
+		}
+
+		call, ok := node.(*ast.CallExpression)
+		if !ok {
+			return node
+		}
+
+		if len(call.Arguments) != 1 {
+			return node
+		}
+
+		unquoted := Eval(call.Arguments[0], env)
+		return convertObjectToASTNode(unquoted)
+	})
+}
+
+// isUnquoteCall はノードが unquote() 関数呼び出しかどうか判定する。
+// 付録で追加。
+func isUnquoteCall(node ast.Node) bool {
+	callExpression, ok := node.(*ast.CallExpression)
+	if !ok {
+		return false
+	}
+
+	return callExpression.Function.TokenLiteral() == "unquote"
+}
+
+// convertObjectToASTNode はオブジェクトをASTノードに変換する。
+// unquote() で評価した結果をASTに埋め戻すために使う。
+// 付録で追加。
+func convertObjectToASTNode(obj object.Object) ast.Node {
+	switch obj := obj.(type) {
+	case *object.Integer:
+		t := token.Token{
+			Type:    token.INT,
+			Literal: fmt.Sprintf("%d", obj.Value),
+		}
+		return &ast.IntegerLiteral{Token: t, Value: obj.Value}
+
+	case *object.Boolean:
+		var t token.Token
+		if obj.Value {
+			t = token.Token{Type: token.TRUE, Literal: "true"}
+		} else {
+			t = token.Token{Type: token.FALSE, Literal: "false"}
+		}
+		return &ast.Boolean{Token: t, Value: obj.Value}
+
+	case *object.Quote:
+		return obj.Node
+
+	default:
+		return nil
+	}
 }

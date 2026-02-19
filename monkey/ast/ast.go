@@ -421,3 +421,37 @@ func (hl *HashLiteral) String() string {
 
 	return out.String()
 }
+
+// =====================
+// 付録で追加された式
+// =====================
+
+// MacroLiteral はマクロリテラル `macro(<params>) <body>` を表す。
+// FunctionLiteral と同じ構造だが、評価時に引数を評価せず
+// ASTノードをそのまま受け取り、AST変換を行う。
+type MacroLiteral struct {
+	Token      token.Token // 'macro' トークン
+	Parameters []*Identifier
+	Body       *BlockStatement
+}
+
+func (ml *MacroLiteral) expressionNode()      {}
+func (ml *MacroLiteral) TokenLiteral() string { return ml.Token.Literal }
+
+// String は `macro(<params>) <body>` の形式で返す。
+func (ml *MacroLiteral) String() string {
+	var out bytes.Buffer
+
+	params := []string{}
+	for _, p := range ml.Parameters {
+		params = append(params, p.String())
+	}
+
+	out.WriteString(ml.TokenLiteral())
+	out.WriteString("(")
+	out.WriteString(strings.Join(params, ", "))
+	out.WriteString(") ")
+	out.WriteString(ml.Body.String())
+
+	return out.String()
+}
