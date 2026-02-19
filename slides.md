@@ -21,7 +21,7 @@ style: |
 ---
 
 # Go言語でつくるインタプリタ
-## 振り返り会 - 2026/02/06
+## 振り返り会 - 2026/02/19
 
 ---
 
@@ -32,14 +32,15 @@ style: |
 3. **第1章** - Lexer（字句解析器）
 4. **第2章** - Parser & AST（構文解析）
 5. **第3章** - Evaluator（評価器）
-6. **学んだこと・気づき**
-7. **聞きたいこと**
+6. **第4章** - インタプリタの拡張
+7. **学んだこと・気づき**
+8. **聞きたいこと**
 
 ---
 
 # この取り組みの目的
 
-| ゴール | 3章までの関連 |
+| ゴール | 4章までの関連 |
 |--------|-------------|
 | コンピュータは何故動くのかを自分なりに理解する | ソースコード → トークン → AST → 実行の流れを体験 |
 | CS基礎の組み合わせによる構造を理解する | 字句解析・構文解析・評価という段階的な処理 |
@@ -56,7 +57,7 @@ style: |
 
 - **Monkey言語**というオリジナル言語のインタプリタをGoで実装
 - 外部ライブラリ不使用、フルスクラッチで構築
-- 全4章構成（今回は1〜3章）
+- 全4章構成（全章実装完了！）
 
 ---
 
@@ -70,14 +71,16 @@ let result = 10 * (20 / 2);
 let add = fn(a, b) { a + b; };
 add(1, 2);
 
-if (age > 0) {
-    return "adult";
-} else {
-    return "child";
-}
-```
+// 4章で追加された機能
+let arr = [1, "hello", fn(x) { x * 2 }];
+arr[0];  // => 1
 
-変数束縛、算術演算、関数、条件分岐などを備えた言語
+let people = {"name": "Monkey", "age": 1};
+people["name"];  // => Monkey
+
+len("Hello");  // => 5
+push(arr, 4);  // => [1, "hello", fn, 4]
+```
 
 ---
 
@@ -98,7 +101,7 @@ if (age > 0) {
        ↓
 ┌──────────────┐
 │  Evaluator   │  第3章：AST → 実行結果
-│   （評価）    │
+│   （評価）    │  第4章：文字列/配列/ハッシュ/組み込み関数を追加
 └──────────────┘
 ```
 
@@ -323,6 +326,28 @@ Integer{15}
 
 ---
 
+# オブジェクトシステム
+
+ASTノード（構文）と評価結果（値）は**別の型**で表す
+
+```go
+type Object interface {
+    Type() ObjectType
+    Inspect() string
+}
+```
+
+| Object型 | 役割 | 例 |
+|----------|------|-----|
+| `Integer` | 整数値 | `42` |
+| `Boolean` | 真偽値 | `true` / `false` |
+| `Null` | 値なし | `null` |
+| `ReturnValue` | return文の値をラップ | `return 5;` → 5を包む |
+| `Error` | エラー情報 | `"unknown operator: -BOOLEAN"` |
+| `Function` | 関数（引数 + 本体 + 環境） | `fn(x) { x + 1 }` |
+
+---
+
 # Eval関数の核心
 
 ```go
@@ -346,9 +371,9 @@ func Eval(node ast.Node, env *object.Environment) object.Object {
 
 ---
 
-# 環境（Environment）
+# 環境（Environment）とクロージャ
 
-**変数名と値の対応表**
+**変数名と値の対応表** + **外側のスコープへの参照**
 
 ```go
 type Environment struct {
@@ -357,17 +382,36 @@ type Environment struct {
 }
 ```
 
+```javascript
+let newAdder = fn(x) {
+    fn(y) { x + y };   // ← 外側の x を覚えている！
+};
+let addTwo = newAdder(2);
+addTwo(3);  // => 5
 ```
-let x = 5;
-let y = 10;
 
-env = {
-    "x": Integer{5},
-    "y": Integer{10},
+関数が**定義時の環境を閉じ込める** = **クロージャ**
+`outer` のチェーンで外側の変数を参照できる
+
+---
+
+# エラー伝播の仕組み
+
+エラーは**Errorオブジェクトとして値の世界で伝播**する
+
+```go
+func Eval(node ast.Node, env *object.Environment) object.Object {
+    // ...
+    case *ast.InfixExpression:
+        left := Eval(node.Left, env)
+        if isError(left) { return left }    // エラーなら即座に返す
+        right := Eval(node.Right, env)
+        if isError(right) { return right }  // エラーなら即座に返す
+        return evalInfixExpression(node.Operator, left, right)
 }
 ```
 
-`outer` でスコープのネスト（クロージャ）を実現
+例外機構（try/catch）を使わず、**戻り値でエラーを返す** = Go的な発想
 
 ---
 
@@ -397,15 +441,213 @@ env = { "x": Integer{15} }
 
 ---
 
+# 第4章：インタプリタの拡張
+
+---
+
+# 4章の全体像
+
+3章までで**整数・真偽値・関数**が動く基盤ができた
+4章ではその基盤の上に**新しいデータ型**と**組み込み関数**を追加
+
+| 追加要素 | 内容 |
+|---------|------|
+| 文字列（String） | `"hello"` + 連結演算子 `+` |
+| 配列（Array） | `[1, 2, 3]` + インデックスアクセス `arr[0]` |
+| ハッシュ（Hash） | `{"key": "value"}` + キーアクセス |
+| 組み込み関数 | `len`, `first`, `last`, `rest`, `push`, `puts` |
+
+**既存のアーキテクチャを壊さず、各層に少しずつ追加していく**
+
+---
+
+# 文字列型の追加
+
+**Lexer → Parser → Object → Evaluator の全層に変更が必要**
+
+```
+"hello world"
+  ↓ Lexer:  readString() で " から " まで読む
+  ↓ Parser: StringLiteral ノードを生成
+  ↓ Eval:   object.String{Value: "hello world"} を返す
+```
+
+文字列の連結:
+```javascript
+"Hello" + " " + "World"  // => "Hello World"
+```
+
+evalInfixExpression に**文字列同士の `+` 演算**を追加するだけ
+
+---
+
+# 配列型の追加
+
+```javascript
+let arr = [1, 2 * 3, fn(x){ x + 1 }];
+arr[0];   // => 1
+arr[1];   // => 6
+arr[2](5) // => 6（関数も要素にできる！）
+```
+
+**新しい優先順位 INDEX が必要**（最も高い優先順位）
+
+```
+LOWEST < EQUALS < LESSGREATER < SUM < PRODUCT < PREFIX < CALL < INDEX
+```
+
+`myArray[0]` は中置式: 左辺 `myArray` + 演算子 `[` + 右辺 `0`
+
+---
+
+# parseExpressionList のリファクタリング
+
+3章の `parseCallArguments` と4章の配列パースは**ほぼ同じ処理**
+
+```
+fn(a, b, c)   ← カンマ区切りの式リスト、終端は ")"
+[1, 2, 3]     ← カンマ区切りの式リスト、終端は "]"
+```
+
+→ **終端トークンだけが違う**ので汎用化:
+
+```go
+// 3章: parseCallArguments() → ")" 固定
+// 4章: parseExpressionList(end TokenType) → 終端を引数で受け取る
+```
+
+「共通パターンを見つけて汎用化する」リファクタリングの好例
+
+---
+
+# ハッシュ型の追加
+
+```javascript
+let people = {"name": "Monkey", "age": 1, true: "yes"};
+people["name"];  // => Monkey
+people["age"];   // => 1
+people[true];    // => yes
+```
+
+**キーに使える型を制限する** → `Hashable` インターフェース
+
+```go
+type Hashable interface {
+    HashKey() HashKey    // ハッシュ値を返せる型だけキーにできる
+}
+```
+
+Integer, Boolean, String だけが `Hashable` を実装
+→ 配列や関数はキーにできない（コンパイル時にチェック）
+
+---
+
+# HashKey の設計
+
+Go の map でキーとして使うために**比較可能な構造体**が必要
+
+```go
+type HashKey struct {
+    Type  ObjectType
+    Value uint64
+}
+```
+
+| 型 | HashKey の計算方法 |
+|---|---|
+| Integer | 値そのまま `uint64(value)` |
+| Boolean | true → 1, false → 0 |
+| String | FNV-1a ハッシュ関数で計算 |
+
+**同じ内容 → 同じ HashKey** を保証することが重要
+
+---
+
+# 組み込み関数（Built-in Functions）
+
+ユーザーが定義しなくても使える関数
+
+| 関数 | 用途 | 例 |
+|------|------|-----|
+| `len` | 長さを返す | `len("abc")` → 3, `len([1,2])` → 2 |
+| `first` | 最初の要素 | `first([1,2,3])` → 1 |
+| `last` | 最後の要素 | `last([1,2,3])` → 3 |
+| `rest` | 先頭以外 | `rest([1,2,3])` → [2,3] |
+| `push` | 末尾に追加 | `push([1,2], 3)` → [1,2,3] |
+| `puts` | 出力 | `puts("hello")` → hello |
+
+---
+
+# イミュータブルな操作
+
+`push` と `rest` は**元の配列を変更しない**
+
+```javascript
+let a = [1, 2, 3];
+let b = push(a, 4);
+// a は [1, 2, 3] のまま！（変わらない）
+// b は [1, 2, 3, 4]（新しい配列）
+```
+
+```go
+// push の実装: 新しいスライスを作ってコピー
+newElements := make([]object.Object, length+1)
+copy(newElements, arr.Elements)
+newElements[length] = args[1]
+return &object.Array{Elements: newElements}
+```
+
+**関数型プログラミングの考え方**: データを壊さず、新しいデータを作る
+
+---
+
+# 組み込み関数で再帰を活用
+
+`push`/`rest`/`first` を組み合わせると**ループなしで配列処理**ができる
+
+```javascript
+let map = fn(arr, f) {
+    if (len(arr) == 0) { return []; }
+    let first_elem = first(arr);
+    let rest_arr = rest(arr);
+    push(map(rest_arr, f), f(first_elem));
+};
+
+map([1, 2, 3], fn(x) { x * 2 });  // => [2, 4, 6]
+```
+
+Monkey言語にはfor/whileループがない → **再帰で繰り返しを表現**
+
+---
+
+# 4章の設計思想：拡張の容易さ
+
+新しいデータ型を追加するときの変更箇所:
+
+```
+1. token/token.go    → 新しいトークン定義を追加
+2. lexer/lexer.go    → 新しい文字の読み取り処理
+3. ast/ast.go        → 新しいASTノード型を定義
+4. parser/parser.go  → prefix/infix 関数を登録
+5. object/object.go  → 新しいObjectを定義
+6. evaluator/        → Eval に case を追加
+```
+
+**各層が疎結合なので、既存コードを壊さず拡張できる**
+→ これが3章までに作った基盤の強さ
+
+---
+
 # 現在の進捗
 
 | 章 | 内容 | 状態 |
 |---|------|------|
 | 第1章 | Lexer / Token | 実装完了 |
-| 第2章 | Parser / AST | 構造定義・Parser骨格まで |
-| 第3章 | Evaluator / Object | 概要理解済み |
+| 第2章 | Parser / AST | 実装完了 |
+| 第3章 | Evaluator / Object / Environment | 実装完了 |
+| 第4章 | String / Array / Hash / Builtins | 実装完了 |
 
-**実装済みパッケージ**: `token`, `lexer`, `repl`, `ast`(一部), `parser`(骨格)
+**全テスト通過**: `go test ./...` OK
 
 ---
 
@@ -437,6 +679,7 @@ env = { "x": 15 }   ← 計算して結果を得る
 | `lexer` | 文字 → トークン | 字句解析（有限オートマトン） |
 | `ast` | 木構造の定義 | データ構造（木） |
 | `parser` | トークン → AST | 構文解析（再帰下降） |
+| `object` | 値の表現 | 型システム・ハッシュ |
 | `evaluator` | AST → 実行 | 木の走査（再帰） |
 
 **それぞれは単純。組み合わせることで「言語」になる。**
@@ -465,13 +708,60 @@ func TestNextToken(t *testing.T) {
 
 ---
 
+# 学んだこと - 拡張しやすい設計
+
+3章で作った基盤が4章の拡張で活きた
+
+- **Objectインターフェース**: `Type()` と `Inspect()` さえ実装すれば新しい型を追加できる
+- **Pratt Parserの関数登録**: prefix/infix に関数を登録するだけで新構文に対応
+- **Evalのswitch文**: case を追加するだけで新しいノードを評価できる
+
+→ **インターフェースによる拡張性**がGoの強み
+
+4章を通じて「3章の設計が良かったから簡単に拡張できた」と体感
+
+---
+
 # 学んだこと - Go言語の知識
 
-- **インターフェース**: 異なる型を統一的に扱う仕組み（Node, Statement, Expression）
+- **インターフェース**: 異なる型を統一的に扱う仕組み（Node, Statement, Expression, Object, Hashable）
 - **ポインタ（`*`）**: 状態の共有とコピー回避のために必要
 - **パッケージ構造**: 責務ごとにコードを分離する設計
 - **`switch ... .(type)`**: 型で処理を振り分けるGoの型アサーション
-- **インタプリタ vs コンパイラ**: ASTまでは共通、その後の処理が異なる
+- **可変長引数 `...`**: 組み込み関数の `func(args ...object.Object)` で活用
+- **`copy` と `make`**: イミュータブルな操作でスライスを安全にコピー
+
+---
+
+# 学んだこと - 関数型プログラミングの考え方
+
+Monkey言語には**ループ構文がない**
+
+```javascript
+// for/while の代わりに再帰 + 組み込み関数
+let reduce = fn(arr, initial, f) {
+    if (len(arr) == 0) { return initial; }
+    reduce(rest(arr), f(initial, first(arr)), f);
+};
+
+let sum = fn(arr) {
+    reduce(arr, 0, fn(acc, el) { acc + el });
+};
+
+sum([1, 2, 3, 4, 5]);  // => 15
+```
+
+- **イミュータブルなデータ操作**（push/rest は元を壊さない）
+- **第一級関数**（関数を引数に渡せる、変数に入れられる）
+
+---
+
+# 聞きたいこと - アーキテクチャ
+
+- 4章で「各層が疎結合だから拡張が容易」を体感しましたが、
+  実務で**拡張しやすい設計**を意識するポイントはありますか？
+- Goのインターフェースによる拡張（Objectに新しい型を追加するだけ）は
+  実際のプロダクトでもよく使うパターンですか？
 
 ---
 
@@ -481,6 +771,8 @@ func TestNextToken(t *testing.T) {
   実際のプロダクト開発でもよく出てくるパターンですか？
 - Speeeの開発現場で「木構造」や「再帰」が活きた場面はありますか？
   （例：HTML/DOM処理、設定パーサー、ルーティングなど）
+- ハッシュのキー設計（Hashableインターフェース）のように、
+  「使えるものを型で制限する」設計は実務でも有効ですか？
 
 ---
 
@@ -490,6 +782,8 @@ func TestNextToken(t *testing.T) {
   VPoEとして理想的なテスト文化をチームにどう根付かせていますか？
 - 「責務を分けてパッケージに切る」設計判断について、
   実務ではどのタイミング・粒度で分けるのが良いですか？
+- 4章の`parseExpressionList`のようなリファクタリングのタイミングは
+  どう判断していますか？（先にやる vs 必要になってからやる）
 
 ---
 
