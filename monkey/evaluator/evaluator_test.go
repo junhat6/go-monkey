@@ -741,6 +741,47 @@ func TestQuoteUnquote(t *testing.T) {
 }
 
 // =====================
+// for式のテスト
+// =====================
+
+// TestForExpressions は for式の評価をテストする。
+func TestForExpressions(t *testing.T) {
+	tests := []struct {
+		input    string
+		expected interface{}
+	}{
+		// 基本的なforループ: 最後のbodyの評価値を返す
+		{"for (let i = 0; i < 5; let i = i + 1) { i; }", 4},
+		// 3回ループ
+		{"for (let i = 0; i < 3; let i = i + 1) { i; }", 2},
+		// body内で式を使う
+		{"for (let i = 0; i < 3; let i = i + 1) { i * 2; }", 4},
+		// 条件が最初からfalse → ループ未実行 → NULL
+		{"for (let i = 10; i < 5; let i = i + 1) { i; }", nil},
+		// 関数内でreturn
+		{
+			`let f = fn() {
+				for (let i = 0; i < 10; let i = i + 1) {
+					if (i == 5) { return i; }
+				}
+			};
+			f();`,
+			5,
+		},
+	}
+
+	for _, tt := range tests {
+		evaluated := testEval(tt.input)
+		integer, ok := tt.expected.(int)
+		if ok {
+			testIntegerObject(t, evaluated, int64(integer))
+		} else {
+			testNullObject(t, evaluated)
+		}
+	}
+}
+
+// =====================
 // テスト用ヘルパー関数
 // =====================
 

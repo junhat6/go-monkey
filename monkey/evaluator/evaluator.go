@@ -105,6 +105,9 @@ func Eval(node ast.Node, env *object.Environment) object.Object {
 	case *ast.IfExpression:
 		return evalIfExpression(node, env)
 
+	case *ast.ForExpression:
+		return evalForExpression(node, env)
+
 	// Identifier: 環境から変数の値を取得する（組み込み関数も検索）
 	case *ast.Identifier:
 		return evalIdentifier(node, env)
@@ -351,6 +354,58 @@ func evalIfExpression(
 	} else {
 		return NULL
 	}
+}
+
+// for文の評価
+
+func evalForExpression(
+	fe *ast.ForExpression,
+	env *object.Environment,
+) object.Object {
+	// for文用の新しいスコープを作成
+	forEnv := object.NewEnclosedEnvironment(env)
+
+	// Init部分を評価
+	if fe.Init != nil {
+		val := Eval(fe.Init, forEnv)
+		if isError(val) {
+			return val
+		}
+	}
+
+	var result object.Object = NULL
+
+	for {
+		// Conditionを評価
+		if fe.Condition != nil {
+			condition := Eval(fe.Condition, forEnv)
+			if isError(condition) {
+				return condition
+			}
+			if !isTruthy(condition) {
+				break
+			}
+		}
+
+		// Bodyを評価
+		result = Eval(fe.Body, forEnv)
+		if isError(result) {
+			return result
+		}
+		// return がきたらループを抜ける
+		if result.Type() == object.RETURN_VALUE_OBJ {
+			return result
+		}
+
+		// Updateを評価
+		if fe.Update != nil {
+			val := Eval(fe.Update, forEnv)
+			if isError(val) {
+				return val
+			}
+		}
+	}
+	return result
 }
 
 // =====================
