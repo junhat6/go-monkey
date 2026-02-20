@@ -1029,6 +1029,89 @@ func TestMacroLiteralParsing(t *testing.T) {
 }
 
 // =====================
+// for式のテスト
+// =====================
+
+// TestForExpression は for式のパースをテストする。
+// for (let i = 0; i < 10; let i = i + 1) { i; } の構造を検証する。
+func TestForExpression(t *testing.T) {
+	input := `for (let i = 0; i < 10; let i = i + 1) { i; }`
+
+	l := lexer.New(input)
+	p := New(l)
+	program := p.ParseProgram()
+	checkParserErrors(t, p)
+
+	if len(program.Statements) != 1 {
+		t.Fatalf("program.Statements does not contain 1 statements. got=%d\n",
+			len(program.Statements))
+	}
+
+	stmt, ok := program.Statements[0].(*ast.ExpressionStatement)
+	if !ok {
+		t.Fatalf("program.Statements[0] is not ast.ExpressionStatement. got=%T",
+			program.Statements[0])
+	}
+
+	exp, ok := stmt.Expression.(*ast.ForExpression)
+	if !ok {
+		t.Fatalf("stmt.Expression is not ast.ForExpression. got=%T",
+			stmt.Expression)
+	}
+
+	// Init: let i = 0;
+	if !testLetStatement(t, exp.Init, "i") {
+		return
+	}
+	initLet := exp.Init.(*ast.LetStatement)
+	if !testLiteralExpression(t, initLet.Value, 0) {
+		return
+	}
+
+	// Condition: i < 10
+	if !testInfixExpression(t, exp.Condition, "i", "<", 10) {
+		return
+	}
+
+	// Update: let i = i + 1
+	if !testLetStatement(t, exp.Update, "i") {
+		return
+	}
+
+	// Body: { i; }
+	if len(exp.Body.Statements) != 1 {
+		t.Fatalf("body is not 1 statements. got=%d\n",
+			len(exp.Body.Statements))
+	}
+
+	bodyStmt, ok := exp.Body.Statements[0].(*ast.ExpressionStatement)
+	if !ok {
+		t.Fatalf("body stmt is not ast.ExpressionStatement. got=%T",
+			exp.Body.Statements[0])
+	}
+
+	if !testIdentifier(t, bodyStmt.Expression, "i") {
+		return
+	}
+}
+
+// TestForExpressionString は for式のString()メソッドをテストする。
+func TestForExpressionString(t *testing.T) {
+	input := `for (let i = 0; i < 10; let i = i + 1) { i; }`
+
+	l := lexer.New(input)
+	p := New(l)
+	program := p.ParseProgram()
+	checkParserErrors(t, p)
+
+	expected := "for(let i = 0; (i < 10); let i = (i + 1)) i"
+	if program.String() != expected {
+		t.Errorf("program.String() wrong.\nexpected=%q\ngot=%q",
+			expected, program.String())
+	}
+}
+
+// =====================
 // テスト用ヘルパー関数
 // =====================
 

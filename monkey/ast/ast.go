@@ -455,3 +455,39 @@ func (ml *MacroLiteral) String() string {
 
 	return out.String()
 }
+
+type ForExpression struct {
+	Token     token.Token     //  'for'トークン
+	Init      Statement       // 初期化文 let i = 0; 省略可能
+	Condition Expression      // 条件式 i < 10; 省略可能
+	Update    Statement       // 更新式 let i = i + 1; 省略可能
+	Body      *BlockStatement // ループ本体
+}
+
+func (fe *ForExpression) expressionNode()      {}
+func (fe *ForExpression) TokenLiteral() string { return fe.Token.Literal }
+
+// for式を文字列に変換する
+func (fe *ForExpression) String() string {
+	var out bytes.Buffer
+
+	out.WriteString("for(")
+
+	if fe.Init != nil {
+		out.WriteString(fe.Init.String())
+	}
+	out.WriteString(" ")
+
+	if fe.Condition != nil {
+		out.WriteString(fe.Condition.String())
+	}
+	out.WriteString("; ")
+
+	if fe.Update != nil {
+		out.WriteString(strings.TrimSuffix(fe.Update.String(), ";"))
+	}
+	out.WriteString(") ")
+	out.WriteString(fe.Body.String())
+
+	return out.String()
+}

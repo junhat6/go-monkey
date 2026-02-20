@@ -104,6 +104,7 @@ func New(l *lexer.Lexer) *Parser {
 	p.registerPrefix(token.LBRACKET, p.parseArrayLiteral)
 	p.registerPrefix(token.LBRACE, p.parseHashLiteral)
 	p.registerPrefix(token.MACRO, p.parseMacroLiteral)
+	p.registerPrefix(token.FOR, p.parseForExpression)
 
 	// 中置解析関数の登録
 	p.infixParseFns = make(map[token.TokenType]infixParseFn)
@@ -265,9 +266,9 @@ func (p *Parser) parseExpressionStatement() *ast.ExpressionStatement {
 // =====================
 
 // parseExpression はPratt Parserのメインループ。
-// 1. まず現在のトークンに対応する前置解析関数を呼んで左辺の式を得る
-// 2. 次のトークンの優先順位が現在の優先順位より高い間、
-//    中置解析関数を呼んで左辺に演算子と右辺を結合していく
+//  1. まず現在のトークンに対応する前置解析関数を呼んで左辺の式を得る
+//  2. 次のトークンの優先順位が現在の優先順位より高い間、
+//     中置解析関数を呼んで左辺に演算子と右辺を結合していく
 func (p *Parser) parseExpression(precedence int) ast.Expression {
 	prefix := p.prefixParseFns[p.curToken.Type]
 	if prefix == nil {
@@ -620,4 +621,52 @@ func (p *Parser) registerPrefix(tokenType token.TokenType, fn prefixParseFn) {
 // registerInfix は中置解析関数を登録するヘルパー。
 func (p *Parser) registerInfix(tokenType token.TokenType, fn infixParseFn) {
 	p.infixParseFns[tokenType] = fn
+}
+
+// for (<init>; <condition>; <update>) { <body> }
+func (p *Parser) parseForExpression() ast.Expression {
+	expression := &ast.ForExpression{Token: p.curToken}
+
+	if !p.expectPeek(token.LPAREN) {
+		return nil
+	}
+
+	// Init部分
+	p.nextToken()
+	if p.curTokenIs(token.LET) {
+		expression.Init = p.parseLetStatement()
+	} else if !p.curTokenIs(token.SEMICOLON) {
+		expression.Init = p.parseExpressionStatement()
+	} else {
+	}
+
+	// Condition部分
+	p.nextToken()
+	if !p.curTokenIs(token.SEMICOLON) {
+		expression.Condition = p.parseExpression(LOWEST)
+		if !p.expectPeek(token.SEMICOLON) {
+			return nil
+		}
+	}
+
+	// Update部分
+	p.nextToken()
+	if p.curTokenIs(token.LET) {
+		expression.Update = p.parseLetStatement()
+	} else if !p.curTokenIs(token.RPAREN) {
+		expression.Update = p.parseExpressionStatement()
+	}
+
+	if !p.curTokenIs(token.RPAREN) {
+		if !p.expectPeek(token.RPAREN) {
+			return nil
+		}
+	}
+
+	if !p.expectPeek(token.LBRACE) {
+		return nil
+	}
+
+	expression.Body = p.parseBlockStatement()
+	return expression
 }
