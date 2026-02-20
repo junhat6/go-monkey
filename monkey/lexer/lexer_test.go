@@ -33,6 +33,7 @@ if (5 < 10) {
 "foo bar"
 [1, 2];
 {"foo": "bar"}
+for (let i = 0; i < 10; let i = i + 1) { i; }
 `
 
 	tests := []struct {
@@ -124,6 +125,29 @@ if (5 < 10) {
 		{token.STRING, "foo"},
 		{token.COLON, ":"},
 		{token.STRING, "bar"},
+		{token.RBRACE, "}"},
+		// for式のトークン化テスト
+		{token.FOR, "for"},
+		{token.LPAREN, "("},
+		{token.LET, "let"},
+		{token.IDENT, "i"},
+		{token.ASSIGN, "="},
+		{token.INT, "0"},
+		{token.SEMICOLON, ";"},
+		{token.IDENT, "i"},
+		{token.LT, "<"},
+		{token.INT, "10"},
+		{token.SEMICOLON, ";"},
+		{token.LET, "let"},
+		{token.IDENT, "i"},
+		{token.ASSIGN, "="},
+		{token.IDENT, "i"},
+		{token.PLUS, "+"},
+		{token.INT, "1"},
+		{token.RPAREN, ")"},
+		{token.LBRACE, "{"},
+		{token.IDENT, "i"},
+		{token.SEMICOLON, ";"},
 		{token.RBRACE, "}"},
 		{token.EOF, ""},
 	}

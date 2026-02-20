@@ -50,6 +50,8 @@ const (
 	ELSE     = "ELSE"
 	RETURN   = "RETURN"
 	MACRO    = "MACRO" // マクロ定義（付録で追加）
+
+	FOR = "FOR"
 )
 
 // Token はトークンの型とリテラル値のペア。
@@ -68,6 +70,7 @@ var keywords = map[string]TokenType{
 	"else":   ELSE,
 	"return": RETURN,
 	"macro":  MACRO,
+	"for":    FOR,
 }
 
 // LookupIdent は識別子が予約語かどうかを判定する。
