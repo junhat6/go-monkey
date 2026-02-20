@@ -960,38 +960,215 @@ func Start(in io.Reader, out io.Writer) {
 
 ---
 
-# 学んだこと - コンピュータが動く仕組み
+# 学んだCS基礎 - 全体像
 
-人間が書いた文字列が**段階的に変換**されて実行される
+go-monkeyで学べたCS基礎を振り返る
 
-```
-"let x = 5 + 10;"   ← 人間が読める
-       ↓ Lexer
-[LET][x][=][5][+][10][;]   ← 意味のある単位に分解
-       ↓ Parser
-LetStatement{x, Add{5,10}}  ← 構造として理解
-       ↓ Evaluator
-env = { "x": 15 }   ← 計算して結果を得る
-```
+| 分野 | 学んだこと | go-monkeyでの使われ方 |
+|------|-----------|---------------------|
+| データ構造 | 木、ハッシュマップ、連結リスト | AST、変数環境、ハッシュ型 |
+| アルゴリズム | 再帰、木の走査、Pratt Parser | Eval、Modify、式のパース |
+| 言語処理系 | 字句解析、構文解析、評価 | Lexer → Parser → Evaluator |
+| スコープ | レキシカルスコープ、クロージャ | Environment チェーン |
+| 型の設計 | インターフェース、ハッシュ関数 | Object、Hashable、FNV-1a |
+| メタプログラミング | quote/unquote、AST変換 | マクロシステム |
 
-コンピュータは「魔法」ではなく、**小さな変換の積み重ね**で動いている
+→ 次のスライドから**各分野の詳細と、go-monkeyのどこで使われているか**を見ていく
 
 ---
 
-# 学んだこと - CS基礎の組み合わせ
+# 学んだCS基礎 - データ構造
 
-各パッケージが**1つの責務**を持ち、組み合わさって動く
+## 木構造（Tree）
 
-| パッケージ | 責務 | CS概念 |
-|-----------|------|--------|
-| `token` | 定義だけ | データ型の設計 |
-| `lexer` | 文字 → トークン | 字句解析（有限オートマトン） |
-| `ast` | 木構造の定義 | データ構造（木） |
-| `parser` | トークン → AST | 構文解析（再帰下降） |
-| `object` | 値の表現 | 型システム・ハッシュ |
-| `evaluator` | AST → 実行 | 木の走査（再帰） |
+ASTそのものが木構造。`5 + 10 * 2` をパースすると：
 
-**それぞれは単純。組み合わせることで「言語」になる。**
+```
+        [+]           ← InfixExpression（ルートノード）
+       /   \
+     [5]   [*]        ← 子ノードも InfixExpression
+          /   \
+        [10]  [2]     ← IntegerLiteral（葉ノード）
+```
+
+go-monkeyでは `ast.go` で **Node → Statement / Expression** のインターフェース階層を定義し、
+`IfExpression` や `InfixExpression` など**各ノード型が子ノードへの参照を持つ**ことで木を形成
+
+---
+
+# 学んだCS基礎 - データ構造
+
+## ハッシュマップ（Hash Map）
+
+go-monkeyでは**3箇所**でハッシュマップが使われている
+
+**1. キーワード判定**（`token/token.go`）
+```go
+var keywords = map[string]TokenType{"fn": FUNCTION, "let": LET, ...}
+```
+
+**2. 変数環境**（`object/environment.go`）
+```go
+type Environment struct {
+    store map[string]Object    // 変数名 → 値
+    outer *Environment         // 外側のスコープへのポインタ
+}
+```
+
+**3. Monkey言語のハッシュ型**（`object/object.go`）
+```go
+type Hash struct {
+    Pairs map[HashKey]HashPair  // HashKey → キーと値のペア
+}
+```
+→ `HashKey` を使うために **FNV-1a ハッシュ関数**（文字列をuint64に変換）も学んだ
+
+---
+
+# 学んだCS基礎 - データ構造
+
+## 連結リスト的な構造（Linked List）
+
+Environmentの `outer` ポインタが**連結リストのように**スコープを繋ぐ
+
+```
+関数呼び出し時:
+┌─────────────┐    ┌──────────────┐    ┌──────────────┐
+│ inner env    │───→│ outer env     │───→│ global env    │
+│ x = 10      │    │ addTwo = fn   │    │ newAdder = fn │
+└─────────────┘    └──────────────┘    └──────────────┘
+```
+
+```go
+// 変数を探すとき、見つからなければ outer を辿る（再帰的な探索）
+func (e *Environment) Get(name string) (Object, bool) {
+    obj, ok := e.store[name]
+    if !ok && e.outer != nil {
+        obj, ok = e.outer.Get(name)  // 外側のスコープを探索
+    }
+    return obj, ok
+}
+```
+
+→ これが**クロージャの仕組み**。関数が定義時のEnvironmentを `outer` として保持する
+
+---
+
+# 学んだCS基礎 - アルゴリズム
+
+## 再帰（Recursion）
+
+go-monkeyは**ほぼ全ての処理が再帰**で動いている
+
+| 場所 | どう再帰しているか |
+|------|-------------------|
+| `Eval()` | `InfixExpression` → 左右の子ノードをそれぞれ再帰的にEval |
+| `Environment.Get()` | 変数が見つからなければ `outer.Get()` を再帰呼び出し |
+| `ast.Modify()` | 全ノード型を再帰的に走査し、変換関数を適用 |
+| `parseExpression()` | 中置演算子を見つけるたびに右辺を再帰パース |
+
+Monkey言語自体もfor/whileがないため、**ユーザーも再帰で繰り返しを表現**する
+
+```javascript
+let map = fn(arr, f) {
+    if (len(arr) == 0) { return []; }
+    push(map(rest(arr), f), f(first(arr)));  // ← 再帰！
+};
+```
+
+---
+
+# 学んだCS基礎 - アルゴリズム
+
+## Pratt Parser（演算子優先順位解析）
+
+`parser.go` の核心。**トークンの種類に処理関数を登録する**テーブル駆動方式
+
+```go
+// 「このトークンが式の先頭に来たらこの関数で処理する」
+p.registerPrefix(token.INT, p.parseIntegerLiteral)    // 数値
+p.registerPrefix(token.MINUS, p.parsePrefixExpression) // -5
+p.registerPrefix(token.IF, p.parseIfExpression)        // if式
+
+// 「このトークンが式の途中に来たらこの関数で処理する」
+p.registerInfix(token.PLUS, p.parseInfixExpression)    // a + b
+p.registerInfix(token.ASTERISK, p.parseInfixExpression)// a * b
+p.registerInfix(token.LPAREN, p.parseCallExpression)   // fn(a)
+```
+
+優先順位の数値を比較して**木の深さを制御する**ことで、
+`1 + 2 * 3` が自然に `1 + (2 * 3)` になる
+
+→ 新しい演算子を追加するとき、**関数を1つ書いて登録するだけ**で対応できる拡張性の高い設計
+
+---
+
+# 学んだCS基礎 - 型システムとインターフェース
+
+## Goのインターフェースによる多態性
+
+go-monkeyの全レイヤーが**インターフェースで設計**されている
+
+```go
+// AST: 全ノードが Node を実装
+type Node interface { TokenLiteral() string; String() string }
+
+// Object: 全ての値が Object を実装
+type Object interface { Type() ObjectType; Inspect() string }
+
+// Hashable: ハッシュのキーにできる型だけが実装
+type Hashable interface { HashKey() HashKey }
+```
+
+`Hashable` の設計が面白い：
+- Integer, Boolean, String → `HashKey()` を実装 → キーにできる
+- Array, Function → 実装しない → **コンパイル時にキーに使えないことが保証される**
+
+→ 「**使えるものを型で制限する**」という設計パターンを学んだ
+
+---
+
+# 学んだCS基礎 - メモリ効率の工夫
+
+## シングルトンパターン
+
+`true`、`false`、`null` は**プログラム中に1つだけ**存在すればいい
+
+```go
+var (
+    NULL  = &object.Null{}
+    TRUE  = &object.Boolean{Value: true}
+    FALSE = &object.Boolean{Value: false}
+)
+
+func nativeBoolToBooleanObject(input bool) *object.Boolean {
+    if input { return TRUE }  // 毎回新しく作らず、既存のものを返す
+    return FALSE
+}
+```
+
+→ `true` が出てくるたびに `&object.Boolean{Value: true}` を作ると**無駄なメモリ確保**が発生
+→ 事前に1つだけ作っておき使い回す = **シングルトンパターン**
+→ ポインタ比較（`==`）で高速に同一性チェックもできる
+
+---
+
+# 学んだCS基礎 - 学べなかったこと
+
+go-monkeyは言語処理系の基礎に特化しているため、**カバーしていないCS分野**も多い
+
+| 分野 | なぜ学べなかったか |
+|------|-------------------|
+| **メモリ管理** | GoのGCが自動回収。malloc/freeのような手動管理は不要 |
+| **スタック / ヒープ** | Go が裏で管理しており、意識する場面がない |
+| **並行処理** | goroutine / チャネルは未使用。シングルスレッドで動作 |
+| **ネットワーク / I/O** | stdin/stdout のみ。ファイルやHTTPは扱わない |
+| **バイトコード / VM** | Tree-walking 方式。コンパイルやVM実行は行わない |
+| **高度なデータ構造** | グラフ、平衡木、ヒープなどは出てこない |
+| **最適化** | 末尾再帰最適化、JIT、キャッシュなどは対象外 |
+
+→ メモリ管理やVM を学ぶなら、同著者の次作 **「Writing A Compiler In Go」**
+（バイトコード生成 + スタックマシンVM）が次のステップ
 
 ---
 
@@ -1017,17 +1194,86 @@ func TestNextToken(t *testing.T) {
 
 ---
 
-# 学んだこと - 拡張しやすい設計
+# 学んだこと - for文追加で気づいた設計の美しさ
 
-3章で作った基盤が4章の拡張で活きた
+本に無い**for文を自力で追加**してみた → 既存設計の強さを体感
 
-- **Objectインターフェース**: `Type()` と `Inspect()` さえ実装すれば新しい型を追加できる
-- **Pratt Parserの関数登録**: prefix/infix に関数を登録するだけで新構文に対応
-- **Evalのswitch文**: case を追加するだけで新しいノードを評価できる
+| レイヤー | 変更内容 | 変更量 |
+|---------|---------|--------|
+| `token.go` | 定数1個 + mapに1行 | **2行** |
+| `lexer.go` | **変更なし** | **0行** |
+| `ast.go` | ForExpression定義 | 約35行（新規） |
+| `parser.go` | registerPrefix 1行 + parseForExpression | 約50行（新規） |
+| `evaluator.go` | case 1行 + evalForExpression | 約50行（新規） |
 
-→ **インターフェースによる拡張性**がGoの強み
+新しい制御構造なのに、**既存コードの修正は実質2行だけ**。残りは全て新規追加
 
-4章を通じて「3章の設計が良かったから簡単に拡張できた」と体感
+---
+
+# for文で気づいた美しさ① - Lexerを触らなくていい
+
+`lexer.go` は**1行も変更していない**
+
+```go
+// token.go の keywords map に1行追加するだけ
+"for": FOR,
+```
+
+`readIdentifier()` → `LookupIdent()` の仕組みが汎用的なので、
+**キーワードが何個増えてもLexerのロジックは不変**
+
+→ 「文字を読む処理」と「キーワードの定義」が完全に分離されている
+
+---
+
+# for文で気づいた美しさ② - 既存パーツの組み合わせ
+
+for文のパースで**新しく発明したロジックはゼロ**。全て既存パーツの再利用
+
+```go
+// parser.go - registerPrefixに1行追加するだけで構文が増える
+p.registerPrefix(token.FOR, p.parseForExpression)
+
+func (p *Parser) parseForExpression() ast.Expression {
+    // init部分 → 既存の parseLetStatement() をそのまま呼ぶ
+    expression.Init = p.parseLetStatement()
+
+    // 条件部分 → 既存の parseExpression() をそのまま呼ぶ
+    expression.Condition = p.parseExpression(LOWEST)
+
+    // body部分 → if文・関数と全く同じ parseBlockStatement()
+    expression.Body = p.parseBlockStatement()
+}
+```
+
+`parseBlockStatement`、`parseLetStatement`、`parseExpression` …
+**独立した小さな関数として切り出してあるから、for文の中でもそのまま使える**
+
+---
+
+# for文で気づいた美しさ③ - Evalのcase 1行 + 環境の再利用
+
+```go
+// evaluator.go の Eval に case を1行追加するだけ
+case *ast.ForExpression:
+    return evalForExpression(node, env)
+```
+
+for文の変数スコープも**既存の仕組み1行で解決**:
+
+```go
+// 関数呼び出し用に作られた仕組みが、for文にもそのまま使える
+forEnv := object.NewEnclosedEnvironment(env)
+```
+
+条件判定やエラー処理も既存ヘルパーをそのまま使う:
+
+```go
+if !isTruthy(condition) { break }   // if文と同じ関数
+if isError(val) { return val }       // 全ノード共通のパターン
+```
+
+→ **拡張に開いて、修正に閉じている**（Open-Closed Principle）を体感
 
 ---
 
@@ -1079,43 +1325,37 @@ sum([1, 2, 3, 4, 5]);  // => 15
 
 ---
 
-# 聞きたいこと - アーキテクチャ
+# 聞きたいこと - 前回の議論の深掘り
 
-- 4章で「各層が疎結合だから拡張が容易」を体感しましたが、
-  実務で**拡張しやすい設計**を意識するポイントはありますか？
-- Goのインターフェースによる拡張（Objectに新しい型を追加するだけ）は
-  実際のプロダクトでもよく使うパターンですか？
-
----
-
-# 聞きたいこと - 技術面
-
-- インタプリタの「Lexer → Parser → Evaluator」という段階的な設計は、
-  実際のプロダクト開発でもよく出てくるパターンですか？
-- Speeeの開発現場で「木構造」や「再帰」が活きた場面はありますか？
-  （例：HTML/DOM処理、設定パーサー、ルーティングなど）
-- ハッシュのキー設計（Hashableインターフェース）のように、
-  「使えるものを型で制限する」設計は実務でも有効ですか？
+- 前回「**設計の本質は命名**」という話がありましたが、
+  大葉さんがコードレビューで「命名が良い/悪い」と感じる基準はありますか？
+  → チーム全体で命名力を上げるために工夫していることはありますか？
+- 前回「**ペアプロ・モブプロで全部やる**」という話が印象的でした。
+  導入初期にメンバーから抵抗はありましたか？定着するまでのコツは？
+- 「**マイクロサービスで言語が違うと運用がめんどくさい**」とのことでしたが、
+  技術スタックを統一する vs 最適な言語を選ぶ、の判断基準はありますか？
 
 ---
 
-# 聞きたいこと - 開発プラクティス
+# 聞きたいこと - VPoEとしての組織づくり
 
-- この本はテストを先に書いて実装する進め方ですが、
-  VPoEとして理想的なテスト文化をチームにどう根付かせていますか？
-- 「責務を分けてパッケージに切る」設計判断について、
-  実務ではどのタイミング・粒度で分けるのが良いですか？
-- 4章の`parseExpressionList`のようなリファクタリングのタイミングは
-  どう判断していますか？（先にやる vs 必要になってからやる）
+- エンジニアの**技術力をどう評価**していますか？
+  コードの品質、設計力、問題解決力など、見ているポイントは？
+- 「この人は伸びる」と感じるエンジニアに共通する特徴はありますか？
+- チームの技術力を底上げするために、
+  モブプロ以外に取り組んでいる施策はありますか？
+  （勉強会、読書会、技術共有の仕組みなど）
 
 ---
 
-# 聞きたいこと - キャリア・学び方
+# 聞きたいこと - 技術とキャリア
 
-- CS基礎（データ構造・アルゴリズム・言語処理系など）を学んだことが
-  エンジニアとしてのキャリアで「効いた」と感じた瞬間はありますか？
-- 新しい技術領域を学ぶとき、VPoEの立場から見て
-  「写経」「読書」「アウトプット」のバランスはどう取るのがおすすめですか？
+- 今回for文の実装に取り組んでいますが、このような**本に無い機能を自力で追加する経験**は、
+  実務でどのくらい活きると思いますか？
+- エンジニアとして**最初の1〜2年で身につけるべきこと**として、
+  大葉さんが最も重要だと思うものは何ですか？
+- VPoEになるまでのキャリアの中で、
+  **転機になった経験や学び**があれば教えてください
 
 ---
 

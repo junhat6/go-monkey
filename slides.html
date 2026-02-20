@@ -38,7 +38,7 @@ code {
 table {
   font-size: 0.85em;
 }
-;" data-marpit-pagination-total="73">
+;" data-marpit-pagination-total="82">
 <h1 id="go%E8%A8%80%E8%AA%9E%E3%81%A7%E3%81%A4%E3%81%8F%E3%82%8B%E3%82%A4%E3%83%B3%E3%82%BF%E3%83%97%E3%83%AA%E3%82%BF">Go言語でつくるインタプリタ</h1>
 <h2 id="%E6%8C%AF%E3%82%8A%E8%BF%94%E3%82%8A%E4%BC%9A---20260219">振り返り会 - 2026/02/19</h2>
 </section>
@@ -72,7 +72,7 @@ code {
 table {
   font-size: 0.85em;
 }
-;" data-marpit-pagination-total="73">
+;" data-marpit-pagination-total="82">
 <h1 id="%E4%BB%8A%E6%97%A5%E3%81%AE%E3%82%A2%E3%82%B8%E3%82%A7%E3%83%B3%E3%83%80">今日のアジェンダ</h1>
 <ol>
 <li><strong>この取り組みの目的</strong></li>
@@ -117,7 +117,7 @@ code {
 table {
   font-size: 0.85em;
 }
-;" data-marpit-pagination-total="73">
+;" data-marpit-pagination-total="82">
 <h1 id="%E3%81%93%E3%81%AE%E5%8F%96%E3%82%8A%E7%B5%84%E3%81%BF%E3%81%AE%E7%9B%AE%E7%9A%84">この取り組みの目的</h1>
 <table>
 <thead>
@@ -177,7 +177,7 @@ code {
 table {
   font-size: 0.85em;
 }
-;" data-marpit-pagination-total="73">
+;" data-marpit-pagination-total="82">
 <h1 id="%E6%9B%B8%E7%B1%8D%E3%81%AE%E6%A6%82%E8%A6%81">書籍の概要</h1>
 <p><strong>Writing An Interpreter In Go</strong>（Thorsten Ball 著）</p>
 <ul>
@@ -216,7 +216,7 @@ code {
 table {
   font-size: 0.85em;
 }
-;" data-marpit-pagination-total="73">
+;" data-marpit-pagination-total="82">
 <h1 id="monkey%E8%A8%80%E8%AA%9E%E3%81%A7%E3%81%A7%E3%81%8D%E3%82%8B%E3%81%93%E3%81%A8">Monkey言語でできること</h1>
 <pre is="marp-pre" data-auto-scaling="downscale-only"><code class="language-javascript"><span class="hljs-keyword">let</span> age = <span class="hljs-number">1</span>;
 <span class="hljs-keyword">let</span> name = <span class="hljs-string">&quot;Monkey&quot;</span>;
@@ -272,7 +272,7 @@ code {
 table {
   font-size: 0.85em;
 }
-;" data-marpit-pagination-total="73">
+;" data-marpit-pagination-total="82">
 <h1 id="%E3%82%A4%E3%83%B3%E3%82%BF%E3%83%97%E3%83%AA%E3%82%BF%E3%81%AE%E5%85%A8%E4%BD%93%E5%83%8F">インタプリタの全体像</h1>
 <pre is="marp-pre" data-auto-scaling="downscale-only"><code>ソースコード（文字列）
        ↓
@@ -327,7 +327,7 @@ code {
 table {
   font-size: 0.85em;
 }
-;" data-marpit-pagination-total="73">
+;" data-marpit-pagination-total="82">
 <h1 id="%E7%AC%AC1%E7%AB%A0lexer%E5%AD%97%E5%8F%A5%E8%A7%A3%E6%9E%90%E5%99%A8">第1章：Lexer（字句解析器）</h1>
 </section>
 </foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="8" data-paginate="true" data-theme="default" data-style="section {
@@ -360,7 +360,7 @@ code {
 table {
   font-size: 0.85em;
 }
-;" data-marpit-pagination-total="73">
+;" data-marpit-pagination-total="82">
 <h1 id="%E3%83%88%E3%83%BC%E3%82%AF%E3%83%B3%E3%81%A8%E3%81%AF">トークンとは</h1>
 <p><strong>プログラムの意味のある最小単位</strong></p>
 <pre is="marp-pre" data-auto-scaling="downscale-only"><code>let x = 5 + 10;
@@ -435,7 +435,7 @@ code {
 table {
   font-size: 0.85em;
 }
-;" data-marpit-pagination-total="73">
+;" data-marpit-pagination-total="82">
 <h1 id="lexer%E3%81%AE%E4%BB%95%E7%B5%84%E3%81%BF">Lexerの仕組み</h1>
 <p>文字列を1文字ずつ読み進めてトークンを生成</p>
 <pre is="marp-pre" data-auto-scaling="downscale-only"><code class="language-go"><span class="hljs-keyword">type</span> Lexer <span class="hljs-keyword">struct</span> {
@@ -481,7 +481,7 @@ code {
 table {
   font-size: 0.85em;
 }
-;" data-marpit-pagination-total="73">
+;" data-marpit-pagination-total="82">
 <h1 id="%E3%83%88%E3%83%BC%E3%82%AF%E3%83%B3%E5%AE%9A%E7%BE%A9">トークン定義</h1>
 <pre is="marp-pre" data-auto-scaling="downscale-only"><code class="language-go"><span class="hljs-keyword">type</span> Token <span class="hljs-keyword">struct</span> {
     Type    TokenType
@@ -536,7 +536,7 @@ code {
 table {
   font-size: 0.85em;
 }
-;" data-marpit-pagination-total="73">
+;" data-marpit-pagination-total="82">
 <h1 id="%E7%AC%AC2%E7%AB%A0parser--ast%E6%A7%8B%E6%96%87%E8%A7%A3%E6%9E%90">第2章：Parser &amp; AST（構文解析）</h1>
 </section>
 </foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="12" data-paginate="true" data-theme="default" data-style="section {
@@ -569,7 +569,7 @@ code {
 table {
   font-size: 0.85em;
 }
-;" data-marpit-pagination-total="73">
+;" data-marpit-pagination-total="82">
 <h1 id="%E3%81%AA%E3%81%9C%E3%83%88%E3%83%BC%E3%82%AF%E3%83%B3%E5%8C%96%E3%81%A0%E3%81%91%E3%81%A7%E3%81%AF%E8%B6%B3%E3%82%8A%E3%81%AA%E3%81%84%E3%81%AE%E3%81%8B">なぜトークン化だけでは足りないのか</h1>
 <p>トークン列は<strong>単語が並んでいるだけ</strong></p>
 <pre is="marp-pre" data-auto-scaling="downscale-only"><code>[INT:5] [PLUS] [INT:10] [ASTERISK] [INT:2]
@@ -611,7 +611,7 @@ code {
 table {
   font-size: 0.85em;
 }
-;" data-marpit-pagination-total="73">
+;" data-marpit-pagination-total="82">
 <h1 id="ast%E6%8A%BD%E8%B1%A1%E6%A7%8B%E6%96%87%E6%9C%A8">AST（抽象構文木）</h1>
 <p>トークン列を<strong>木構造</strong>に変換すると関係性が明確になる</p>
 <pre is="marp-pre" data-auto-scaling="downscale-only"><code>  5 + 10 * 2
@@ -654,7 +654,7 @@ code {
 table {
   font-size: 0.85em;
 }
-;" data-marpit-pagination-total="73">
+;" data-marpit-pagination-total="82">
 <h1 id="ast%E3%81%AE%E5%AE%9A%E7%BE%A9go%E3%81%AE%E3%82%A4%E3%83%B3%E3%82%BF%E3%83%BC%E3%83%95%E3%82%A7%E3%83%BC%E3%82%B9">ASTの定義（Goのインターフェース）</h1>
 <pre is="marp-pre" data-auto-scaling="downscale-only"><code class="language-go"><span class="hljs-keyword">type</span> Node <span class="hljs-keyword">interface</span> {          <span class="hljs-comment">// 全ノードの基本</span>
     TokenLiteral() <span class="hljs-type">string</span>
@@ -705,7 +705,7 @@ code {
 table {
   font-size: 0.85em;
 }
-;" data-marpit-pagination-total="73">
+;" data-marpit-pagination-total="82">
 <h1 id="let%E6%96%87%E3%81%AE%E3%83%91%E3%83%BC%E3%82%B9">let文のパース</h1>
 <p><code>let x = 5 + 10;</code> → 期待するパターンに沿って解析</p>
 <pre is="marp-pre" data-auto-scaling="downscale-only"><code>let    x    =    5 + 10    ;
@@ -752,7 +752,7 @@ code {
 table {
   font-size: 0.85em;
 }
-;" data-marpit-pagination-total="73">
+;" data-marpit-pagination-total="82">
 <h1 id="%E5%86%8D%E5%B8%B0%E4%B8%8B%E9%99%8D%E6%A7%8B%E6%96%87%E8%A7%A3%E6%9E%90pratt-parser">再帰下降構文解析（Pratt Parser）</h1>
 <p><strong>トップダウン</strong> + <strong>再帰</strong> でパースする方式</p>
 <pre is="marp-pre" data-auto-scaling="downscale-only"><code>ParseProgram()           ← プログラム全体
@@ -799,7 +799,7 @@ code {
 table {
   font-size: 0.85em;
 }
-;" data-marpit-pagination-total="73">
+;" data-marpit-pagination-total="82">
 <h1 id="%E5%BC%8F%E3%81%AE%E5%88%A4%E6%96%AD%E6%96%B9%E6%B3%95">式の判断方法</h1>
 <p>トークンの種類に対応した処理関数を登録</p>
 <table>
@@ -857,7 +857,7 @@ code {
 table {
   font-size: 0.85em;
 }
-;" data-marpit-pagination-total="73">
+;" data-marpit-pagination-total="82">
 <h1 id="%E7%AC%AC3%E7%AB%A0evaluator%E8%A9%95%E4%BE%A1%E5%99%A8">第3章：Evaluator（評価器）</h1>
 </section>
 </foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="19" data-paginate="true" data-theme="default" data-style="section {
@@ -890,7 +890,7 @@ code {
 table {
   font-size: 0.85em;
 }
-;" data-marpit-pagination-total="73">
+;" data-marpit-pagination-total="82">
 <h1 id="%E8%A9%95%E4%BE%A1%E3%81%A8%E3%81%AF">評価とは</h1>
 <p><strong>ASTを木の下から順に計算して値を求めること</strong></p>
 <pre is="marp-pre" data-auto-scaling="downscale-only"><code>InfixExpression{5, +, 10}
@@ -933,7 +933,7 @@ code {
 table {
   font-size: 0.85em;
 }
-;" data-marpit-pagination-total="73">
+;" data-marpit-pagination-total="82">
 <h1 id="%E3%82%AA%E3%83%96%E3%82%B8%E3%82%A7%E3%82%AF%E3%83%88%E3%82%B7%E3%82%B9%E3%83%86%E3%83%A0">オブジェクトシステム</h1>
 <p>ASTノード（構文）と評価結果（値）は<strong>別の型</strong>で表す</p>
 <pre is="marp-pre" data-auto-scaling="downscale-only"><code class="language-go"><span class="hljs-keyword">type</span> Object <span class="hljs-keyword">interface</span> {
@@ -1013,7 +1013,7 @@ code {
 table {
   font-size: 0.85em;
 }
-;" data-marpit-pagination-total="73">
+;" data-marpit-pagination-total="82">
 <h1 id="eval%E9%96%A2%E6%95%B0%E3%81%AE%E6%A0%B8%E5%BF%83">Eval関数の核心</h1>
 <pre is="marp-pre" data-auto-scaling="downscale-only"><code class="language-go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">Eval</span><span class="hljs-params">(node ast.Node, env *object.Environment)</span></span> object.Object {
     <span class="hljs-keyword">switch</span> node := node.(<span class="hljs-keyword">type</span>) {
@@ -1063,7 +1063,7 @@ code {
 table {
   font-size: 0.85em;
 }
-;" data-marpit-pagination-total="73">
+;" data-marpit-pagination-total="82">
 <h1 id="%E7%92%B0%E5%A2%83environment%E3%81%A8%E3%82%AF%E3%83%AD%E3%83%BC%E3%82%B8%E3%83%A3">環境（Environment）とクロージャ</h1>
 <p><strong>変数名と値の対応表</strong> + <strong>外側のスコープへの参照</strong></p>
 <pre is="marp-pre" data-auto-scaling="downscale-only"><code class="language-go"><span class="hljs-keyword">type</span> Environment <span class="hljs-keyword">struct</span> {
@@ -1110,7 +1110,7 @@ code {
 table {
   font-size: 0.85em;
 }
-;" data-marpit-pagination-total="73">
+;" data-marpit-pagination-total="82">
 <h1 id="%E3%82%A8%E3%83%A9%E3%83%BC%E4%BC%9D%E6%92%AD%E3%81%AE%E4%BB%95%E7%B5%84%E3%81%BF">エラー伝播の仕組み</h1>
 <p>エラーは<strong>Errorオブジェクトとして値の世界で伝播</strong>する</p>
 <pre is="marp-pre" data-auto-scaling="downscale-only"><code class="language-go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">Eval</span><span class="hljs-params">(node ast.Node, env *object.Environment)</span></span> object.Object {
@@ -1155,7 +1155,7 @@ code {
 table {
   font-size: 0.85em;
 }
-;" data-marpit-pagination-total="73">
+;" data-marpit-pagination-total="82">
 <h1 id="let-x--5--10-%E5%85%A8%E5%87%A6%E7%90%86%E3%81%AE%E6%B5%81%E3%82%8C"><code>let x = 5 + 10;</code> 全処理の流れ</h1>
 <pre is="marp-pre" data-auto-scaling="downscale-only"><code>&quot;let x = 5 + 10;&quot;
 
@@ -1208,7 +1208,7 @@ code {
 table {
   font-size: 0.85em;
 }
-;" data-marpit-pagination-total="73">
+;" data-marpit-pagination-total="82">
 <h1 id="%E7%AC%AC4%E7%AB%A0%E3%82%A4%E3%83%B3%E3%82%BF%E3%83%97%E3%83%AA%E3%82%BF%E3%81%AE%E6%8B%A1%E5%BC%B5">第4章：インタプリタの拡張</h1>
 </section>
 </foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="26" data-paginate="true" data-theme="default" data-style="section {
@@ -1241,7 +1241,7 @@ code {
 table {
   font-size: 0.85em;
 }
-;" data-marpit-pagination-total="73">
+;" data-marpit-pagination-total="82">
 <h1 id="4%E7%AB%A0%E3%81%AE%E5%85%A8%E4%BD%93%E5%83%8F">4章の全体像</h1>
 <p>3章までで<strong>整数・真偽値・関数</strong>が動く基盤ができた<br />
 4章ではその基盤の上に<strong>新しいデータ型</strong>と<strong>組み込み関数</strong>を追加</p>
@@ -1303,7 +1303,7 @@ code {
 table {
   font-size: 0.85em;
 }
-;" data-marpit-pagination-total="73">
+;" data-marpit-pagination-total="82">
 <h1 id="%E6%96%87%E5%AD%97%E5%88%97%E5%9E%8B%E3%81%AE%E8%BF%BD%E5%8A%A0">文字列型の追加</h1>
 <p><strong>Lexer → Parser → Object → Evaluator の全層に変更が必要</strong></p>
 <pre is="marp-pre" data-auto-scaling="downscale-only"><code>&quot;hello world&quot;
@@ -1346,7 +1346,7 @@ code {
 table {
   font-size: 0.85em;
 }
-;" data-marpit-pagination-total="73">
+;" data-marpit-pagination-total="82">
 <h1 id="%E9%85%8D%E5%88%97%E5%9E%8B%E3%81%AE%E8%BF%BD%E5%8A%A0">配列型の追加</h1>
 <pre is="marp-pre" data-auto-scaling="downscale-only"><code class="language-javascript"><span class="hljs-keyword">let</span> arr = [<span class="hljs-number">1</span>, <span class="hljs-number">2</span> * <span class="hljs-number">3</span>, <span class="hljs-title function_">fn</span>(<span class="hljs-params">x</span>){ x + <span class="hljs-number">1</span> }];
 arr[<span class="hljs-number">0</span>];   <span class="hljs-comment">// =&gt; 1</span>
@@ -1388,7 +1388,7 @@ code {
 table {
   font-size: 0.85em;
 }
-;" data-marpit-pagination-total="73">
+;" data-marpit-pagination-total="82">
 <h1 id="parseexpressionlist-%E3%81%AE%E3%83%AA%E3%83%95%E3%82%A1%E3%82%AF%E3%82%BF%E3%83%AA%E3%83%B3%E3%82%B0">parseExpressionList のリファクタリング</h1>
 <p>3章の <code>parseCallArguments</code> と4章の配列パースは<strong>ほぼ同じ処理</strong></p>
 <pre is="marp-pre" data-auto-scaling="downscale-only"><code>fn(a, b, c)   ← カンマ区切りの式リスト、終端は &quot;)&quot;
@@ -1430,7 +1430,7 @@ code {
 table {
   font-size: 0.85em;
 }
-;" data-marpit-pagination-total="73">
+;" data-marpit-pagination-total="82">
 <h1 id="%E3%83%8F%E3%83%83%E3%82%B7%E3%83%A5%E5%9E%8B%E3%81%AE%E8%BF%BD%E5%8A%A0">ハッシュ型の追加</h1>
 <pre is="marp-pre" data-auto-scaling="downscale-only"><code class="language-javascript"><span class="hljs-keyword">let</span> people = {<span class="hljs-string">&quot;name&quot;</span>: <span class="hljs-string">&quot;Monkey&quot;</span>, <span class="hljs-string">&quot;age&quot;</span>: <span class="hljs-number">1</span>, <span class="hljs-attr">true</span>: <span class="hljs-string">&quot;yes&quot;</span>};
 people[<span class="hljs-string">&quot;name&quot;</span>];  <span class="hljs-comment">// =&gt; Monkey</span>
@@ -1475,7 +1475,7 @@ code {
 table {
   font-size: 0.85em;
 }
-;" data-marpit-pagination-total="73">
+;" data-marpit-pagination-total="82">
 <h1 id="hashkey-%E3%81%AE%E8%A8%AD%E8%A8%88">HashKey の設計</h1>
 <p>Go の map でキーとして使うために<strong>比較可能な構造体</strong>が必要</p>
 <pre is="marp-pre" data-auto-scaling="downscale-only"><code class="language-go"><span class="hljs-keyword">type</span> HashKey <span class="hljs-keyword">struct</span> {
@@ -1537,7 +1537,7 @@ code {
 table {
   font-size: 0.85em;
 }
-;" data-marpit-pagination-total="73">
+;" data-marpit-pagination-total="82">
 <h1 id="%E7%B5%84%E3%81%BF%E8%BE%BC%E3%81%BF%E9%96%A2%E6%95%B0built-in-functions">組み込み関数（Built-in Functions）</h1>
 <p>ユーザーが定義しなくても使える関数</p>
 <table>
@@ -1612,7 +1612,7 @@ code {
 table {
   font-size: 0.85em;
 }
-;" data-marpit-pagination-total="73">
+;" data-marpit-pagination-total="82">
 <h1 id="%E3%82%A4%E3%83%9F%E3%83%A5%E3%83%BC%E3%82%BF%E3%83%96%E3%83%AB%E3%81%AA%E6%93%8D%E4%BD%9C">イミュータブルな操作</h1>
 <p><code>push</code> と <code>rest</code> は<strong>元の配列を変更しない</strong></p>
 <pre is="marp-pre" data-auto-scaling="downscale-only"><code class="language-javascript"><span class="hljs-keyword">let</span> a = [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>];
@@ -1658,7 +1658,7 @@ code {
 table {
   font-size: 0.85em;
 }
-;" data-marpit-pagination-total="73">
+;" data-marpit-pagination-total="82">
 <h1 id="%E7%B5%84%E3%81%BF%E8%BE%BC%E3%81%BF%E9%96%A2%E6%95%B0%E3%81%A7%E5%86%8D%E5%B8%B0%E3%82%92%E6%B4%BB%E7%94%A8">組み込み関数で再帰を活用</h1>
 <p><code>push</code>/<code>rest</code>/<code>first</code> を組み合わせると<strong>ループなしで配列処理</strong>ができる</p>
 <pre is="marp-pre" data-auto-scaling="downscale-only"><code class="language-javascript"><span class="hljs-keyword">let</span> map = <span class="hljs-title function_">fn</span>(<span class="hljs-params">arr, f</span>) {
@@ -1702,7 +1702,7 @@ code {
 table {
   font-size: 0.85em;
 }
-;" data-marpit-pagination-total="73">
+;" data-marpit-pagination-total="82">
 <h1 id="4%E7%AB%A0%E3%81%AE%E8%A8%AD%E8%A8%88%E6%80%9D%E6%83%B3%E6%8B%A1%E5%BC%B5%E3%81%AE%E5%AE%B9%E6%98%93%E3%81%95">4章の設計思想：拡張の容易さ</h1>
 <p>新しいデータ型を追加するときの変更箇所:</p>
 <pre is="marp-pre" data-auto-scaling="downscale-only"><code>1. token/token.go    → 新しいトークン定義を追加
@@ -1745,7 +1745,7 @@ code {
 table {
   font-size: 0.85em;
 }
-;" data-marpit-pagination-total="73">
+;" data-marpit-pagination-total="82">
 <h1 id="%E4%BB%98%E9%8C%B2%E3%83%9E%E3%82%AF%E3%83%AD%E3%82%B7%E3%82%B9%E3%83%86%E3%83%A0">付録：マクロシステム</h1>
 </section>
 </foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="37" data-paginate="true" data-theme="default" data-style="section {
@@ -1778,7 +1778,7 @@ code {
 table {
   font-size: 0.85em;
 }
-;" data-marpit-pagination-total="73">
+;" data-marpit-pagination-total="82">
 <h1 id="unless-%E3%82%92%E5%AE%9F%E8%A3%85%E3%81%97%E3%81%9F%E3%81%84">unless を実装したい</h1>
 <p><code>if</code> の反対 — <strong>条件が偽のときに実行</strong>する制御構造</p>
 <pre is="marp-pre" data-auto-scaling="downscale-only"><code class="language-javascript"><span class="hljs-title function_">unless</span>(<span class="hljs-number">10</span> &gt; <span class="hljs-number">5</span>, <span class="hljs-title function_">puts</span>(<span class="hljs-string">&quot;not greater&quot;</span>), <span class="hljs-title function_">puts</span>(<span class="hljs-string">&quot;greater&quot;</span>));
@@ -1816,7 +1816,7 @@ code {
 table {
   font-size: 0.85em;
 }
-;" data-marpit-pagination-total="73">
+;" data-marpit-pagination-total="82">
 <h1 id="%E6%96%B9%E6%B3%951-go%E5%81%B4%E3%82%A4%E3%83%B3%E3%82%BF%E3%83%97%E3%83%AA%E3%82%BF%E6%9C%AC%E4%BD%93%E3%81%AB%E7%B5%84%E3%81%BF%E8%BE%BC%E3%82%80">方法1: Go側（インタプリタ本体）に組み込む</h1>
 <p><code>if</code> と同じように、Go のコードを<strong>4ファイル改修して再コンパイル</strong></p>
 <pre is="marp-pre" data-auto-scaling="downscale-only"><code>1. token.go      UNLESS トークンを追加
@@ -1857,7 +1857,7 @@ code {
 table {
   font-size: 0.85em;
 }
-;" data-marpit-pagination-total="73">
+;" data-marpit-pagination-total="82">
 <h1 id="%E6%96%B9%E6%B3%952-monkey-%E3%81%AE%E9%96%A2%E6%95%B0%E3%81%A8%E3%81%97%E3%81%A6%E5%AE%9F%E8%A3%85%E3%81%99%E3%82%8B%E5%95%8F%E9%A1%8C%E3%81%82%E3%82%8A">方法2: Monkey の関数として実装する（問題あり）</h1>
 <pre is="marp-pre" data-auto-scaling="downscale-only"><code class="language-javascript"><span class="hljs-keyword">let</span> unless = <span class="hljs-title function_">fn</span>(<span class="hljs-params">condition, consequence, alternative</span>) {
     <span class="hljs-keyword">if</span> (!condition) { consequence } <span class="hljs-keyword">else</span> { alternative }
@@ -1897,7 +1897,7 @@ code {
 table {
   font-size: 0.85em;
 }
-;" data-marpit-pagination-total="73">
+;" data-marpit-pagination-total="82">
 <h1 id="%E9%96%A2%E6%95%B0%E3%81%AE%E5%BC%95%E6%95%B0%E3%81%AF%E6%B8%A1%E3%81%99%E5%89%8D%E3%81%AB%E5%85%A8%E9%83%A8%E8%A9%95%E4%BE%A1%E3%81%95%E3%82%8C%E3%82%8B">関数の引数は「渡す前に全部評価される」</h1>
 <pre is="marp-pre" data-auto-scaling="downscale-only"><code class="language-javascript"><span class="hljs-title function_">unless</span>(<span class="hljs-literal">true</span>, <span class="hljs-title function_">puts</span>(<span class="hljs-string">&quot;A&quot;</span>), <span class="hljs-title function_">puts</span>(<span class="hljs-string">&quot;B&quot;</span>));
 </code></pre>
@@ -1940,7 +1940,7 @@ code {
 table {
   font-size: 0.85em;
 }
-;" data-marpit-pagination-total="73">
+;" data-marpit-pagination-total="82">
 <h1 id="%E6%96%B9%E6%B3%953-%E3%83%9E%E3%82%AF%E3%83%AD%E3%82%B7%E3%82%B9%E3%83%86%E3%83%A0">方法3: マクロシステム</h1>
 <p>Go側を改修せず、かつ引数の先行評価問題も起きない第3の方法</p>
 <p><strong>マクロは「評価の前にコードを書き換える」フェーズを挟む</strong></p>
@@ -1983,7 +1983,7 @@ code {
 table {
   font-size: 0.85em;
 }
-;" data-marpit-pagination-total="73">
+;" data-marpit-pagination-total="82">
 <h1 id="3%E3%81%A4%E3%81%AE%E6%96%B9%E6%B3%95%E3%81%AE%E6%AF%94%E8%BC%83">3つの方法の比較</h1>
 <table>
 <thead>
@@ -2043,7 +2043,7 @@ code {
 table {
   font-size: 0.85em;
 }
-;" data-marpit-pagination-total="73">
+;" data-marpit-pagination-total="82">
 <h1 id="%E3%83%9E%E3%82%AF%E3%83%AD%E3%81%A8%E3%81%AF%E4%BD%95%E3%81%8B">マクロとは何か</h1>
 <p><strong>「評価の前にコードを書き換える仕組み」</strong></p>
 <table>
@@ -2108,7 +2108,7 @@ code {
 table {
   font-size: 0.85em;
 }
-;" data-marpit-pagination-total="73">
+;" data-marpit-pagination-total="82">
 <h1 id="%E3%83%9E%E3%82%AF%E3%83%AD%E3%82%B7%E3%82%B9%E3%83%86%E3%83%A0%E3%81%AE3%E3%81%A4%E3%81%AE%E6%9F%B1">マクロシステムの3つの柱</h1>
 <pre is="marp-pre" data-auto-scaling="downscale-only"><code>1. quote / unquote     コードをデータとして扱う
 2. Modify              ASTを再帰的に走査・変換する汎用エンジン
@@ -2181,7 +2181,7 @@ code {
 table {
   font-size: 0.85em;
 }
-;" data-marpit-pagination-total="73">
+;" data-marpit-pagination-total="82">
 <h1 id="%E6%9F%B11-quote--unquote--%E3%82%B3%E3%83%BC%E3%83%89%E3%82%92%E3%83%87%E3%83%BC%E3%82%BF%E3%81%A8%E3%81%97%E3%81%A6%E6%89%B1%E3%81%86">柱1: quote / unquote — コードをデータとして扱う</h1>
 <p>通常 <code>1 + 2</code> は <code>3</code> に評価されるが、<code>quote</code> で囲むと<strong>ASTのまま保持</strong></p>
 <pre is="marp-pre" data-auto-scaling="downscale-only"><code class="language-javascript"><span class="hljs-title function_">quote</span>(<span class="hljs-number">1</span> + <span class="hljs-number">2</span>)           <span class="hljs-comment">// =&gt; QUOTE((1 + 2))  ← 評価されない！</span>
@@ -2225,7 +2225,7 @@ code {
 table {
   font-size: 0.85em;
 }
-;" data-marpit-pagination-total="73">
+;" data-marpit-pagination-total="82">
 <h1 id="quote-%E3%81%AE%E5%AE%9F%E8%A3%85">quote の実装</h1>
 <p><code>CallExpression</code> の評価で <code>quote</code> を<strong>特別扱い</strong>する</p>
 <pre is="marp-pre" data-auto-scaling="downscale-only"><code class="language-go"><span class="hljs-comment">// evaluator.go — Eval関数内</span>
@@ -2273,7 +2273,7 @@ code {
 table {
   font-size: 0.85em;
 }
-;" data-marpit-pagination-total="73">
+;" data-marpit-pagination-total="82">
 <h1 id="%E6%9F%B12-modify--ast%E5%A4%89%E6%8F%9B%E3%81%AE%E6%B1%8E%E7%94%A8%E3%82%A8%E3%83%B3%E3%82%B8%E3%83%B3">柱2: Modify — AST変換の汎用エンジン</h1>
 <p>全ASTノード型を<strong>再帰的に走査</strong>して、各ノードに変換関数を適用</p>
 <pre is="marp-pre" data-auto-scaling="downscale-only"><code class="language-go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">Modify</span><span class="hljs-params">(node Node, modifier ModifierFunc)</span></span> Node {
@@ -2321,7 +2321,7 @@ code {
 table {
   font-size: 0.85em;
 }
-;" data-marpit-pagination-total="73">
+;" data-marpit-pagination-total="82">
 <h1 id="%E6%9F%B13-definemacros--expandmacros">柱3: DefineMacros / ExpandMacros</h1>
 <p><strong>定義フェーズ</strong> — ASTからマクロ定義を抽出して環境に格納</p>
 <pre is="marp-pre" data-auto-scaling="downscale-only"><code class="language-javascript"><span class="hljs-keyword">let</span> unless = <span class="hljs-title function_">macro</span>(<span class="hljs-params">condition, consequence, alternative</span>) {
@@ -2365,7 +2365,7 @@ code {
 table {
   font-size: 0.85em;
 }
-;" data-marpit-pagination-total="73">
+;" data-marpit-pagination-total="82">
 <h1 id="%E3%83%9E%E3%82%AF%E3%83%AD%E5%B1%95%E9%96%8B%E3%81%AE%E6%B5%81%E3%82%8C">マクロ展開の流れ</h1>
 <p><strong>展開フェーズ</strong> — マクロ呼び出しを展開後のASTに置換</p>
 <pre is="marp-pre" data-auto-scaling="downscale-only"><code class="language-javascript"><span class="hljs-title function_">unless</span>(<span class="hljs-number">10</span> &gt; <span class="hljs-number">5</span>, <span class="hljs-title function_">puts</span>(<span class="hljs-string">&quot;not greater&quot;</span>), <span class="hljs-title function_">puts</span>(<span class="hljs-string">&quot;greater&quot;</span>));
@@ -2413,7 +2413,7 @@ code {
 table {
   font-size: 0.85em;
 }
-;" data-marpit-pagination-total="73">
+;" data-marpit-pagination-total="82">
 <h1 id="%E3%83%9E%E3%82%AF%E3%83%AD%E7%89%88-unless--%E8%A9%95%E4%BE%A1%E9%A0%86%E5%BA%8F%E3%82%92%E8%BF%BD%E8%B7%A1">マクロ版 unless — 評価順序を追跡</h1>
 <pre is="marp-pre" data-auto-scaling="downscale-only"><code class="language-javascript"><span class="hljs-title function_">unless</span>(<span class="hljs-literal">true</span>, <span class="hljs-title function_">puts</span>(<span class="hljs-string">&quot;A&quot;</span>), <span class="hljs-title function_">puts</span>(<span class="hljs-string">&quot;B&quot;</span>));
 </code></pre>
@@ -2459,7 +2459,7 @@ code {
 table {
   font-size: 0.85em;
 }
-;" data-marpit-pagination-total="73">
+;" data-marpit-pagination-total="82">
 <h1 id="%E3%83%9E%E3%82%AF%E3%83%AD%E5%B1%95%E9%96%8B%E3%81%AE%E3%83%91%E3%82%A4%E3%83%97%E3%83%A9%E3%82%A4%E3%83%B3repl">マクロ展開のパイプライン（REPL）</h1>
 <pre is="marp-pre" data-auto-scaling="downscale-only"><code class="language-go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">Start</span><span class="hljs-params">(in io.Reader, out io.Writer)</span></span> {
     env := object.NewEnvironment()
@@ -2511,7 +2511,7 @@ code {
 table {
   font-size: 0.85em;
 }
-;" data-marpit-pagination-total="73">
+;" data-marpit-pagination-total="82">
 <h1 id="%E7%8F%BE%E5%9C%A8%E3%81%AE%E9%80%B2%E6%8D%97">現在の進捗</h1>
 <table>
 <thead>
@@ -2581,18 +2581,51 @@ code {
 table {
   font-size: 0.85em;
 }
-;" data-marpit-pagination-total="73">
-<h1 id="%E5%AD%A6%E3%82%93%E3%81%A0%E3%81%93%E3%81%A8---%E3%82%B3%E3%83%B3%E3%83%94%E3%83%A5%E3%83%BC%E3%82%BF%E3%81%8C%E5%8B%95%E3%81%8F%E4%BB%95%E7%B5%84%E3%81%BF">学んだこと - コンピュータが動く仕組み</h1>
-<p>人間が書いた文字列が<strong>段階的に変換</strong>されて実行される</p>
-<pre is="marp-pre" data-auto-scaling="downscale-only"><code>&quot;let x = 5 + 10;&quot;   ← 人間が読める
-       ↓ Lexer
-[LET][x][=][5][+][10][;]   ← 意味のある単位に分解
-       ↓ Parser
-LetStatement{x, Add{5,10}}  ← 構造として理解
-       ↓ Evaluator
-env = { &quot;x&quot;: 15 }   ← 計算して結果を得る
-</code></pre>
-<p>コンピュータは「魔法」ではなく、<strong>小さな変換の積み重ね</strong>で動いている</p>
+;" data-marpit-pagination-total="82">
+<h1 id="%E5%AD%A6%E3%82%93%E3%81%A0cs%E5%9F%BA%E7%A4%8E---%E5%85%A8%E4%BD%93%E5%83%8F">学んだCS基礎 - 全体像</h1>
+<p>go-monkeyで学べたCS基礎を振り返る</p>
+<table>
+<thead>
+<tr>
+<th>分野</th>
+<th>学んだこと</th>
+<th>go-monkeyでの使われ方</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>データ構造</td>
+<td>木、ハッシュマップ、連結リスト</td>
+<td>AST、変数環境、ハッシュ型</td>
+</tr>
+<tr>
+<td>アルゴリズム</td>
+<td>再帰、木の走査、Pratt Parser</td>
+<td>Eval、Modify、式のパース</td>
+</tr>
+<tr>
+<td>言語処理系</td>
+<td>字句解析、構文解析、評価</td>
+<td>Lexer → Parser → Evaluator</td>
+</tr>
+<tr>
+<td>スコープ</td>
+<td>レキシカルスコープ、クロージャ</td>
+<td>Environment チェーン</td>
+</tr>
+<tr>
+<td>型の設計</td>
+<td>インターフェース、ハッシュ関数</td>
+<td>Object、Hashable、FNV-1a</td>
+</tr>
+<tr>
+<td>メタプログラミング</td>
+<td>quote/unquote、AST変換</td>
+<td>マクロシステム</td>
+</tr>
+</tbody>
+</table>
+<p>→ 次のスライドから<strong>各分野の詳細と、go-monkeyのどこで使われているか</strong>を見ていく</p>
 </section>
 </foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="54" data-paginate="true" data-theme="default" data-style="section {
   font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', sans-serif;
@@ -2624,51 +2657,18 @@ code {
 table {
   font-size: 0.85em;
 }
-;" data-marpit-pagination-total="73">
-<h1 id="%E5%AD%A6%E3%82%93%E3%81%A0%E3%81%93%E3%81%A8---cs%E5%9F%BA%E7%A4%8E%E3%81%AE%E7%B5%84%E3%81%BF%E5%90%88%E3%82%8F%E3%81%9B">学んだこと - CS基礎の組み合わせ</h1>
-<p>各パッケージが<strong>1つの責務</strong>を持ち、組み合わさって動く</p>
-<table>
-<thead>
-<tr>
-<th>パッケージ</th>
-<th>責務</th>
-<th>CS概念</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>token</code></td>
-<td>定義だけ</td>
-<td>データ型の設計</td>
-</tr>
-<tr>
-<td><code>lexer</code></td>
-<td>文字 → トークン</td>
-<td>字句解析（有限オートマトン）</td>
-</tr>
-<tr>
-<td><code>ast</code></td>
-<td>木構造の定義</td>
-<td>データ構造（木）</td>
-</tr>
-<tr>
-<td><code>parser</code></td>
-<td>トークン → AST</td>
-<td>構文解析（再帰下降）</td>
-</tr>
-<tr>
-<td><code>object</code></td>
-<td>値の表現</td>
-<td>型システム・ハッシュ</td>
-</tr>
-<tr>
-<td><code>evaluator</code></td>
-<td>AST → 実行</td>
-<td>木の走査（再帰）</td>
-</tr>
-</tbody>
-</table>
-<p><strong>それぞれは単純。組み合わせることで「言語」になる。</strong></p>
+;" data-marpit-pagination-total="82">
+<h1 id="%E5%AD%A6%E3%82%93%E3%81%A0cs%E5%9F%BA%E7%A4%8E---%E3%83%87%E3%83%BC%E3%82%BF%E6%A7%8B%E9%80%A0">学んだCS基礎 - データ構造</h1>
+<h2 id="%E6%9C%A8%E6%A7%8B%E9%80%A0tree">木構造（Tree）</h2>
+<p>ASTそのものが木構造。<code>5 + 10 * 2</code> をパースすると：</p>
+<pre is="marp-pre" data-auto-scaling="downscale-only"><code>        [+]           ← InfixExpression（ルートノード）
+       /   \
+     [5]   [*]        ← 子ノードも InfixExpression
+          /   \
+        [10]  [2]     ← IntegerLiteral（葉ノード）
+</code></pre>
+<p>go-monkeyでは <code>ast.go</code> で <strong>Node → Statement / Expression</strong> のインターフェース階層を定義し、<br />
+<code>IfExpression</code> や <code>InfixExpression</code> など<strong>各ノード型が子ノードへの参照を持つ</strong>ことで木を形成</p>
 </section>
 </foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="55" data-paginate="true" data-theme="default" data-style="section {
   font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', sans-serif;
@@ -2700,24 +2700,25 @@ code {
 table {
   font-size: 0.85em;
 }
-;" data-marpit-pagination-total="73">
-<h1 id="%E5%AD%A6%E3%82%93%E3%81%A0%E3%81%93%E3%81%A8---%E3%83%86%E3%82%B9%E3%83%88%E9%A7%86%E5%8B%95%E9%96%8B%E7%99%BA">学んだこと - テスト駆動開発</h1>
-<p>本書のスタイル：<strong>テストを先に書く → 実装 → テスト通す</strong></p>
-<pre is="marp-pre" data-auto-scaling="downscale-only"><code class="language-go"><span class="hljs-comment">// 例：Lexerのテスト（先にこれを書く）</span>
-<span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">TestNextToken</span><span class="hljs-params">(t *testing.T)</span></span> {
-    input := <span class="hljs-string">`let five = 5;`</span>
-    expected := []token.Token{
-        {Type: token.LET, Literal: <span class="hljs-string">&quot;let&quot;</span>},
-        {Type: token.IDENT, Literal: <span class="hljs-string">&quot;five&quot;</span>},
-        <span class="hljs-comment">// ...</span>
-    }
-    <span class="hljs-comment">// 期待する結果を定義してから実装に取りかかる</span>
+;" data-marpit-pagination-total="82">
+<h1 id="%E5%AD%A6%E3%82%93%E3%81%A0cs%E5%9F%BA%E7%A4%8E---%E3%83%87%E3%83%BC%E3%82%BF%E6%A7%8B%E9%80%A0-1">学んだCS基礎 - データ構造</h1>
+<h2 id="%E3%83%8F%E3%83%83%E3%82%B7%E3%83%A5%E3%83%9E%E3%83%83%E3%83%97hash-map">ハッシュマップ（Hash Map）</h2>
+<p>go-monkeyでは<strong>3箇所</strong>でハッシュマップが使われている</p>
+<p><strong>1. キーワード判定</strong>（<code>token/token.go</code>）</p>
+<pre is="marp-pre" data-auto-scaling="downscale-only"><code class="language-go"><span class="hljs-keyword">var</span> keywords = <span class="hljs-keyword">map</span>[<span class="hljs-type">string</span>]TokenType{<span class="hljs-string">&quot;fn&quot;</span>: FUNCTION, <span class="hljs-string">&quot;let&quot;</span>: LET, ...}
+</code></pre>
+<p><strong>2. 変数環境</strong>（<code>object/environment.go</code>）</p>
+<pre is="marp-pre" data-auto-scaling="downscale-only"><code class="language-go"><span class="hljs-keyword">type</span> Environment <span class="hljs-keyword">struct</span> {
+    store <span class="hljs-keyword">map</span>[<span class="hljs-type">string</span>]Object    <span class="hljs-comment">// 変数名 → 値</span>
+    outer *Environment         <span class="hljs-comment">// 外側のスコープへのポインタ</span>
 }
 </code></pre>
-<ul>
-<li>テストが<strong>仕様書の代わり</strong>になる</li>
-<li>実装の正しさをいつでも確認できる安心感</li>
-</ul>
+<p><strong>3. Monkey言語のハッシュ型</strong>（<code>object/object.go</code>）</p>
+<pre is="marp-pre" data-auto-scaling="downscale-only"><code class="language-go"><span class="hljs-keyword">type</span> Hash <span class="hljs-keyword">struct</span> {
+    Pairs <span class="hljs-keyword">map</span>[HashKey]HashPair  <span class="hljs-comment">// HashKey → キーと値のペア</span>
+}
+</code></pre>
+<p>→ <code>HashKey</code> を使うために <strong>FNV-1a ハッシュ関数</strong>（文字列をuint64に変換）も学んだ</p>
 </section>
 </foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="56" data-paginate="true" data-theme="default" data-style="section {
   font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', sans-serif;
@@ -2749,16 +2750,26 @@ code {
 table {
   font-size: 0.85em;
 }
-;" data-marpit-pagination-total="73">
-<h1 id="%E5%AD%A6%E3%82%93%E3%81%A0%E3%81%93%E3%81%A8---%E6%8B%A1%E5%BC%B5%E3%81%97%E3%82%84%E3%81%99%E3%81%84%E8%A8%AD%E8%A8%88">学んだこと - 拡張しやすい設計</h1>
-<p>3章で作った基盤が4章の拡張で活きた</p>
-<ul>
-<li><strong>Objectインターフェース</strong>: <code>Type()</code> と <code>Inspect()</code> さえ実装すれば新しい型を追加できる</li>
-<li><strong>Pratt Parserの関数登録</strong>: prefix/infix に関数を登録するだけで新構文に対応</li>
-<li><strong>Evalのswitch文</strong>: case を追加するだけで新しいノードを評価できる</li>
-</ul>
-<p>→ <strong>インターフェースによる拡張性</strong>がGoの強み</p>
-<p>4章を通じて「3章の設計が良かったから簡単に拡張できた」と体感</p>
+;" data-marpit-pagination-total="82">
+<h1 id="%E5%AD%A6%E3%82%93%E3%81%A0cs%E5%9F%BA%E7%A4%8E---%E3%83%87%E3%83%BC%E3%82%BF%E6%A7%8B%E9%80%A0-2">学んだCS基礎 - データ構造</h1>
+<h2 id="%E9%80%A3%E7%B5%90%E3%83%AA%E3%82%B9%E3%83%88%E7%9A%84%E3%81%AA%E6%A7%8B%E9%80%A0linked-list">連結リスト的な構造（Linked List）</h2>
+<p>Environmentの <code>outer</code> ポインタが<strong>連結リストのように</strong>スコープを繋ぐ</p>
+<pre is="marp-pre" data-auto-scaling="downscale-only"><code>関数呼び出し時:
+┌─────────────┐    ┌──────────────┐    ┌──────────────┐
+│ inner env    │───→│ outer env     │───→│ global env    │
+│ x = 10      │    │ addTwo = fn   │    │ newAdder = fn │
+└─────────────┘    └──────────────┘    └──────────────┘
+</code></pre>
+<pre is="marp-pre" data-auto-scaling="downscale-only"><code class="language-go"><span class="hljs-comment">// 変数を探すとき、見つからなければ outer を辿る（再帰的な探索）</span>
+<span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(e *Environment)</span></span> Get(name <span class="hljs-type">string</span>) (Object, <span class="hljs-type">bool</span>) {
+    obj, ok := e.store[name]
+    <span class="hljs-keyword">if</span> !ok &amp;&amp; e.outer != <span class="hljs-literal">nil</span> {
+        obj, ok = e.outer.Get(name)  <span class="hljs-comment">// 外側のスコープを探索</span>
+    }
+    <span class="hljs-keyword">return</span> obj, ok
+}
+</code></pre>
+<p>→ これが<strong>クロージャの仕組み</strong>。関数が定義時のEnvironmentを <code>outer</code> として保持する</p>
 </section>
 </foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="57" data-paginate="true" data-theme="default" data-style="section {
   font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', sans-serif;
@@ -2790,17 +2801,42 @@ code {
 table {
   font-size: 0.85em;
 }
-;" data-marpit-pagination-total="73">
-<h1 id="%E5%AD%A6%E3%82%93%E3%81%A0%E3%81%93%E3%81%A8---%E3%83%A1%E3%82%BF%E3%83%97%E3%83%AD%E3%82%B0%E3%83%A9%E3%83%9F%E3%83%B3%E3%82%B0%E3%81%AE%E5%8A%9B">学んだこと - メタプログラミングの力</h1>
-<p>付録のマクロシステムで「<strong>言語のユーザーが言語自体を拡張できる</strong>」ことを体感</p>
-<ul>
-<li><code>unless</code> のような<strong>新しい制御構造</strong>をMonkeyコードだけで追加できる<br />
-（Go側のコードを触らずに！）</li>
-<li>関数では不可能なこと（引数の遅延評価）がマクロなら可能</li>
-<li><strong>コードとデータの境界が曖昧になる</strong> — Lispの哲学</li>
-</ul>
-<p>マクロ展開を「パーサーと評価器の間」に挟む設計は<br />
-<strong>既存の処理パイプラインを壊さずに新しいフェーズを追加</strong>する好例</p>
+;" data-marpit-pagination-total="82">
+<h1 id="%E5%AD%A6%E3%82%93%E3%81%A0cs%E5%9F%BA%E7%A4%8E---%E3%82%A2%E3%83%AB%E3%82%B4%E3%83%AA%E3%82%BA%E3%83%A0">学んだCS基礎 - アルゴリズム</h1>
+<h2 id="%E5%86%8D%E5%B8%B0recursion">再帰（Recursion）</h2>
+<p>go-monkeyは<strong>ほぼ全ての処理が再帰</strong>で動いている</p>
+<table>
+<thead>
+<tr>
+<th>場所</th>
+<th>どう再帰しているか</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Eval()</code></td>
+<td><code>InfixExpression</code> → 左右の子ノードをそれぞれ再帰的にEval</td>
+</tr>
+<tr>
+<td><code>Environment.Get()</code></td>
+<td>変数が見つからなければ <code>outer.Get()</code> を再帰呼び出し</td>
+</tr>
+<tr>
+<td><code>ast.Modify()</code></td>
+<td>全ノード型を再帰的に走査し、変換関数を適用</td>
+</tr>
+<tr>
+<td><code>parseExpression()</code></td>
+<td>中置演算子を見つけるたびに右辺を再帰パース</td>
+</tr>
+</tbody>
+</table>
+<p>Monkey言語自体もfor/whileがないため、<strong>ユーザーも再帰で繰り返しを表現</strong>する</p>
+<pre is="marp-pre" data-auto-scaling="downscale-only"><code class="language-javascript"><span class="hljs-keyword">let</span> map = <span class="hljs-title function_">fn</span>(<span class="hljs-params">arr, f</span>) {
+    <span class="hljs-keyword">if</span> (<span class="hljs-title function_">len</span>(arr) == <span class="hljs-number">0</span>) { <span class="hljs-keyword">return</span> []; }
+    <span class="hljs-title function_">push</span>(<span class="hljs-title function_">map</span>(<span class="hljs-title function_">rest</span>(arr), f), <span class="hljs-title function_">f</span>(<span class="hljs-title function_">first</span>(arr)));  <span class="hljs-comment">// ← 再帰！</span>
+};
+</code></pre>
 </section>
 </foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="58" data-paginate="true" data-theme="default" data-style="section {
   font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', sans-serif;
@@ -2832,16 +2868,23 @@ code {
 table {
   font-size: 0.85em;
 }
-;" data-marpit-pagination-total="73">
-<h1 id="%E5%AD%A6%E3%82%93%E3%81%A0%E3%81%93%E3%81%A8---go%E8%A8%80%E8%AA%9E%E3%81%AE%E7%9F%A5%E8%AD%98">学んだこと - Go言語の知識</h1>
-<ul>
-<li><strong>インターフェース</strong>: 異なる型を統一的に扱う仕組み（Node, Statement, Expression, Object, Hashable）</li>
-<li><strong>ポインタ（<code>*</code>）</strong>: 状態の共有とコピー回避のために必要</li>
-<li><strong>パッケージ構造</strong>: 責務ごとにコードを分離する設計</li>
-<li><strong><code>switch ... .(type)</code></strong>: 型で処理を振り分けるGoの型アサーション</li>
-<li><strong>可変長引数 <code>...</code></strong>: 組み込み関数の <code>func(args ...object.Object)</code> で活用</li>
-<li><strong><code>copy</code> と <code>make</code></strong>: イミュータブルな操作でスライスを安全にコピー</li>
-</ul>
+;" data-marpit-pagination-total="82">
+<h1 id="%E5%AD%A6%E3%82%93%E3%81%A0cs%E5%9F%BA%E7%A4%8E---%E3%82%A2%E3%83%AB%E3%82%B4%E3%83%AA%E3%82%BA%E3%83%A0-1">学んだCS基礎 - アルゴリズム</h1>
+<h2 id="pratt-parser%E6%BC%94%E7%AE%97%E5%AD%90%E5%84%AA%E5%85%88%E9%A0%86%E4%BD%8D%E8%A7%A3%E6%9E%90">Pratt Parser（演算子優先順位解析）</h2>
+<p><code>parser.go</code> の核心。<strong>トークンの種類に処理関数を登録する</strong>テーブル駆動方式</p>
+<pre is="marp-pre" data-auto-scaling="downscale-only"><code class="language-go"><span class="hljs-comment">// 「このトークンが式の先頭に来たらこの関数で処理する」</span>
+p.registerPrefix(token.INT, p.parseIntegerLiteral)    <span class="hljs-comment">// 数値</span>
+p.registerPrefix(token.MINUS, p.parsePrefixExpression) <span class="hljs-comment">// -5</span>
+p.registerPrefix(token.IF, p.parseIfExpression)        <span class="hljs-comment">// if式</span>
+
+<span class="hljs-comment">// 「このトークンが式の途中に来たらこの関数で処理する」</span>
+p.registerInfix(token.PLUS, p.parseInfixExpression)    <span class="hljs-comment">// a + b</span>
+p.registerInfix(token.ASTERISK, p.parseInfixExpression)<span class="hljs-comment">// a * b</span>
+p.registerInfix(token.LPAREN, p.parseCallExpression)   <span class="hljs-comment">// fn(a)</span>
+</code></pre>
+<p>優先順位の数値を比較して<strong>木の深さを制御する</strong>ことで、<br />
+<code>1 + 2 * 3</code> が自然に <code>1 + (2 * 3)</code> になる</p>
+<p>→ 新しい演算子を追加するとき、<strong>関数を1つ書いて登録するだけ</strong>で対応できる拡張性の高い設計</p>
 </section>
 </foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="59" data-paginate="true" data-theme="default" data-style="section {
   font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', sans-serif;
@@ -2873,25 +2916,25 @@ code {
 table {
   font-size: 0.85em;
 }
-;" data-marpit-pagination-total="73">
-<h1 id="%E5%AD%A6%E3%82%93%E3%81%A0%E3%81%93%E3%81%A8---%E9%96%A2%E6%95%B0%E5%9E%8B%E3%83%97%E3%83%AD%E3%82%B0%E3%83%A9%E3%83%9F%E3%83%B3%E3%82%B0%E3%81%AE%E8%80%83%E3%81%88%E6%96%B9">学んだこと - 関数型プログラミングの考え方</h1>
-<p>Monkey言語には<strong>ループ構文がない</strong></p>
-<pre is="marp-pre" data-auto-scaling="downscale-only"><code class="language-javascript"><span class="hljs-comment">// for/while の代わりに再帰 + 組み込み関数</span>
-<span class="hljs-keyword">let</span> reduce = <span class="hljs-title function_">fn</span>(<span class="hljs-params">arr, initial, f</span>) {
-    <span class="hljs-keyword">if</span> (<span class="hljs-title function_">len</span>(arr) == <span class="hljs-number">0</span>) { <span class="hljs-keyword">return</span> initial; }
-    <span class="hljs-title function_">reduce</span>(<span class="hljs-title function_">rest</span>(arr), <span class="hljs-title function_">f</span>(initial, <span class="hljs-title function_">first</span>(arr)), f);
-};
+;" data-marpit-pagination-total="82">
+<h1 id="%E5%AD%A6%E3%82%93%E3%81%A0cs%E5%9F%BA%E7%A4%8E---%E5%9E%8B%E3%82%B7%E3%82%B9%E3%83%86%E3%83%A0%E3%81%A8%E3%82%A4%E3%83%B3%E3%82%BF%E3%83%BC%E3%83%95%E3%82%A7%E3%83%BC%E3%82%B9">学んだCS基礎 - 型システムとインターフェース</h1>
+<h2 id="go%E3%81%AE%E3%82%A4%E3%83%B3%E3%82%BF%E3%83%BC%E3%83%95%E3%82%A7%E3%83%BC%E3%82%B9%E3%81%AB%E3%82%88%E3%82%8B%E5%A4%9A%E6%85%8B%E6%80%A7">Goのインターフェースによる多態性</h2>
+<p>go-monkeyの全レイヤーが<strong>インターフェースで設計</strong>されている</p>
+<pre is="marp-pre" data-auto-scaling="downscale-only"><code class="language-go"><span class="hljs-comment">// AST: 全ノードが Node を実装</span>
+<span class="hljs-keyword">type</span> Node <span class="hljs-keyword">interface</span> { TokenLiteral() <span class="hljs-type">string</span>; String() <span class="hljs-type">string</span> }
 
-<span class="hljs-keyword">let</span> sum = <span class="hljs-title function_">fn</span>(<span class="hljs-params">arr</span>) {
-    <span class="hljs-title function_">reduce</span>(arr, <span class="hljs-number">0</span>, <span class="hljs-title function_">fn</span>(<span class="hljs-params">acc, el</span>) { acc + el });
-};
+<span class="hljs-comment">// Object: 全ての値が Object を実装</span>
+<span class="hljs-keyword">type</span> Object <span class="hljs-keyword">interface</span> { Type() ObjectType; Inspect() <span class="hljs-type">string</span> }
 
-<span class="hljs-title function_">sum</span>([<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>, <span class="hljs-number">5</span>]);  <span class="hljs-comment">// =&gt; 15</span>
+<span class="hljs-comment">// Hashable: ハッシュのキーにできる型だけが実装</span>
+<span class="hljs-keyword">type</span> Hashable <span class="hljs-keyword">interface</span> { HashKey() HashKey }
 </code></pre>
+<p><code>Hashable</code> の設計が面白い：</p>
 <ul>
-<li><strong>イミュータブルなデータ操作</strong>（push/rest は元を壊さない）</li>
-<li><strong>第一級関数</strong>（関数を引数に渡せる、変数に入れられる）</li>
+<li>Integer, Boolean, String → <code>HashKey()</code> を実装 → キーにできる</li>
+<li>Array, Function → 実装しない → <strong>コンパイル時にキーに使えないことが保証される</strong></li>
 </ul>
+<p>→ 「<strong>使えるものを型で制限する</strong>」という設計パターンを学んだ</p>
 </section>
 </foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="60" data-paginate="true" data-theme="default" data-style="section {
   font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', sans-serif;
@@ -2923,14 +2966,24 @@ code {
 table {
   font-size: 0.85em;
 }
-;" data-marpit-pagination-total="73">
-<h1 id="%E8%81%9E%E3%81%8D%E3%81%9F%E3%81%84%E3%81%93%E3%81%A8---%E3%82%A2%E3%83%BC%E3%82%AD%E3%83%86%E3%82%AF%E3%83%81%E3%83%A3">聞きたいこと - アーキテクチャ</h1>
-<ul>
-<li>4章で「各層が疎結合だから拡張が容易」を体感しましたが、<br />
-実務で<strong>拡張しやすい設計</strong>を意識するポイントはありますか？</li>
-<li>Goのインターフェースによる拡張（Objectに新しい型を追加するだけ）は<br />
-実際のプロダクトでもよく使うパターンですか？</li>
-</ul>
+;" data-marpit-pagination-total="82">
+<h1 id="%E5%AD%A6%E3%82%93%E3%81%A0cs%E5%9F%BA%E7%A4%8E---%E3%83%A1%E3%83%A2%E3%83%AA%E5%8A%B9%E7%8E%87%E3%81%AE%E5%B7%A5%E5%A4%AB">学んだCS基礎 - メモリ効率の工夫</h1>
+<h2 id="%E3%82%B7%E3%83%B3%E3%82%B0%E3%83%AB%E3%83%88%E3%83%B3%E3%83%91%E3%82%BF%E3%83%BC%E3%83%B3">シングルトンパターン</h2>
+<p><code>true</code>、<code>false</code>、<code>null</code> は<strong>プログラム中に1つだけ</strong>存在すればいい</p>
+<pre is="marp-pre" data-auto-scaling="downscale-only"><code class="language-go"><span class="hljs-keyword">var</span> (
+    NULL  = &amp;object.Null{}
+    TRUE  = &amp;object.Boolean{Value: <span class="hljs-literal">true</span>}
+    FALSE = &amp;object.Boolean{Value: <span class="hljs-literal">false</span>}
+)
+
+<span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">nativeBoolToBooleanObject</span><span class="hljs-params">(input <span class="hljs-type">bool</span>)</span></span> *object.Boolean {
+    <span class="hljs-keyword">if</span> input { <span class="hljs-keyword">return</span> TRUE }  <span class="hljs-comment">// 毎回新しく作らず、既存のものを返す</span>
+    <span class="hljs-keyword">return</span> FALSE
+}
+</code></pre>
+<p>→ <code>true</code> が出てくるたびに <code>&amp;object.Boolean{Value: true}</code> を作ると<strong>無駄なメモリ確保</strong>が発生<br />
+→ 事前に1つだけ作っておき使い回す = <strong>シングルトンパターン</strong><br />
+→ ポインタ比較（<code>==</code>）で高速に同一性チェックもできる</p>
 </section>
 </foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="61" data-paginate="true" data-theme="default" data-style="section {
   font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', sans-serif;
@@ -2962,16 +3015,49 @@ code {
 table {
   font-size: 0.85em;
 }
-;" data-marpit-pagination-total="73">
-<h1 id="%E8%81%9E%E3%81%8D%E3%81%9F%E3%81%84%E3%81%93%E3%81%A8---%E6%8A%80%E8%A1%93%E9%9D%A2">聞きたいこと - 技術面</h1>
-<ul>
-<li>インタプリタの「Lexer → Parser → Evaluator」という段階的な設計は、<br />
-実際のプロダクト開発でもよく出てくるパターンですか？</li>
-<li>Speeeの開発現場で「木構造」や「再帰」が活きた場面はありますか？<br />
-（例：HTML/DOM処理、設定パーサー、ルーティングなど）</li>
-<li>ハッシュのキー設計（Hashableインターフェース）のように、<br />
-「使えるものを型で制限する」設計は実務でも有効ですか？</li>
-</ul>
+;" data-marpit-pagination-total="82">
+<h1 id="%E5%AD%A6%E3%82%93%E3%81%A0cs%E5%9F%BA%E7%A4%8E---%E5%AD%A6%E3%81%B9%E3%81%AA%E3%81%8B%E3%81%A3%E3%81%9F%E3%81%93%E3%81%A8">学んだCS基礎 - 学べなかったこと</h1>
+<p>go-monkeyは言語処理系の基礎に特化しているため、<strong>カバーしていないCS分野</strong>も多い</p>
+<table>
+<thead>
+<tr>
+<th>分野</th>
+<th>なぜ学べなかったか</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>メモリ管理</strong></td>
+<td>GoのGCが自動回収。malloc/freeのような手動管理は不要</td>
+</tr>
+<tr>
+<td><strong>スタック / ヒープ</strong></td>
+<td>Go が裏で管理しており、意識する場面がない</td>
+</tr>
+<tr>
+<td><strong>並行処理</strong></td>
+<td>goroutine / チャネルは未使用。シングルスレッドで動作</td>
+</tr>
+<tr>
+<td><strong>ネットワーク / I/O</strong></td>
+<td>stdin/stdout のみ。ファイルやHTTPは扱わない</td>
+</tr>
+<tr>
+<td><strong>バイトコード / VM</strong></td>
+<td>Tree-walking 方式。コンパイルやVM実行は行わない</td>
+</tr>
+<tr>
+<td><strong>高度なデータ構造</strong></td>
+<td>グラフ、平衡木、ヒープなどは出てこない</td>
+</tr>
+<tr>
+<td><strong>最適化</strong></td>
+<td>末尾再帰最適化、JIT、キャッシュなどは対象外</td>
+</tr>
+</tbody>
+</table>
+<p>→ メモリ管理やVM を学ぶなら、同著者の次作 <strong>「Writing A Compiler In Go」</strong><br />
+（バイトコード生成 + スタックマシンVM）が次のステップ</p>
 </section>
 </foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="62" data-paginate="true" data-theme="default" data-style="section {
   font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', sans-serif;
@@ -3003,15 +3089,23 @@ code {
 table {
   font-size: 0.85em;
 }
-;" data-marpit-pagination-total="73">
-<h1 id="%E8%81%9E%E3%81%8D%E3%81%9F%E3%81%84%E3%81%93%E3%81%A8---%E9%96%8B%E7%99%BA%E3%83%97%E3%83%A9%E3%82%AF%E3%83%86%E3%82%A3%E3%82%B9">聞きたいこと - 開発プラクティス</h1>
+;" data-marpit-pagination-total="82">
+<h1 id="%E5%AD%A6%E3%82%93%E3%81%A0%E3%81%93%E3%81%A8---%E3%83%86%E3%82%B9%E3%83%88%E9%A7%86%E5%8B%95%E9%96%8B%E7%99%BA">学んだこと - テスト駆動開発</h1>
+<p>本書のスタイル：<strong>テストを先に書く → 実装 → テスト通す</strong></p>
+<pre is="marp-pre" data-auto-scaling="downscale-only"><code class="language-go"><span class="hljs-comment">// 例：Lexerのテスト（先にこれを書く）</span>
+<span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">TestNextToken</span><span class="hljs-params">(t *testing.T)</span></span> {
+    input := <span class="hljs-string">`let five = 5;`</span>
+    expected := []token.Token{
+        {Type: token.LET, Literal: <span class="hljs-string">&quot;let&quot;</span>},
+        {Type: token.IDENT, Literal: <span class="hljs-string">&quot;five&quot;</span>},
+        <span class="hljs-comment">// ...</span>
+    }
+    <span class="hljs-comment">// 期待する結果を定義してから実装に取りかかる</span>
+}
+</code></pre>
 <ul>
-<li>この本はテストを先に書いて実装する進め方ですが、<br />
-VPoEとして理想的なテスト文化をチームにどう根付かせていますか？</li>
-<li>「責務を分けてパッケージに切る」設計判断について、<br />
-実務ではどのタイミング・粒度で分けるのが良いですか？</li>
-<li>4章の<code>parseExpressionList</code>のようなリファクタリングのタイミングは<br />
-どう判断していますか？（先にやる vs 必要になってからやる）</li>
+<li>テストが<strong>仕様書の代わり</strong>になる</li>
+<li>実装の正しさをいつでも確認できる安心感</li>
 </ul>
 </section>
 </foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="63" data-paginate="true" data-theme="default" data-style="section {
@@ -3044,14 +3138,46 @@ code {
 table {
   font-size: 0.85em;
 }
-;" data-marpit-pagination-total="73">
-<h1 id="%E8%81%9E%E3%81%8D%E3%81%9F%E3%81%84%E3%81%93%E3%81%A8---%E3%82%AD%E3%83%A3%E3%83%AA%E3%82%A2%E3%83%BB%E5%AD%A6%E3%81%B3%E6%96%B9">聞きたいこと - キャリア・学び方</h1>
-<ul>
-<li>CS基礎（データ構造・アルゴリズム・言語処理系など）を学んだことが<br />
-エンジニアとしてのキャリアで「効いた」と感じた瞬間はありますか？</li>
-<li>新しい技術領域を学ぶとき、VPoEの立場から見て<br />
-「写経」「読書」「アウトプット」のバランスはどう取るのがおすすめですか？</li>
-</ul>
+;" data-marpit-pagination-total="82">
+<h1 id="%E5%AD%A6%E3%82%93%E3%81%A0%E3%81%93%E3%81%A8---for%E6%96%87%E8%BF%BD%E5%8A%A0%E3%81%A7%E6%B0%97%E3%81%A5%E3%81%84%E3%81%9F%E8%A8%AD%E8%A8%88%E3%81%AE%E7%BE%8E%E3%81%97%E3%81%95">学んだこと - for文追加で気づいた設計の美しさ</h1>
+<p>本に無い<strong>for文を自力で追加</strong>してみた → 既存設計の強さを体感</p>
+<table>
+<thead>
+<tr>
+<th>レイヤー</th>
+<th>変更内容</th>
+<th>変更量</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>token.go</code></td>
+<td>定数1個 + mapに1行</td>
+<td><strong>2行</strong></td>
+</tr>
+<tr>
+<td><code>lexer.go</code></td>
+<td><strong>変更なし</strong></td>
+<td><strong>0行</strong></td>
+</tr>
+<tr>
+<td><code>ast.go</code></td>
+<td>ForExpression定義</td>
+<td>約35行（新規）</td>
+</tr>
+<tr>
+<td><code>parser.go</code></td>
+<td>registerPrefix 1行 + parseForExpression</td>
+<td>約50行（新規）</td>
+</tr>
+<tr>
+<td><code>evaluator.go</code></td>
+<td>case 1行 + evalForExpression</td>
+<td>約50行（新規）</td>
+</tr>
+</tbody>
+</table>
+<p>新しい制御構造なのに、<strong>既存コードの修正は実質2行だけ</strong>。残りは全て新規追加</p>
 </section>
 </foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="64" data-paginate="true" data-theme="default" data-style="section {
   font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', sans-serif;
@@ -3083,8 +3209,15 @@ code {
 table {
   font-size: 0.85em;
 }
-;" data-marpit-pagination-total="73">
-<h1 id="%E6%8C%AF%E3%82%8A%E8%BF%94%E3%82%8A%E4%BC%9A26%E3%81%AE%E8%AD%B0%E8%AB%96%E3%81%BE%E3%81%A8%E3%82%81">振り返り会（2/6）の議論まとめ</h1>
+;" data-marpit-pagination-total="82">
+<h1 id="for%E6%96%87%E3%81%A7%E6%B0%97%E3%81%A5%E3%81%84%E3%81%9F%E7%BE%8E%E3%81%97%E3%81%95%E2%91%A0---lexer%E3%82%92%E8%A7%A6%E3%82%89%E3%81%AA%E3%81%8F%E3%81%A6%E3%81%84%E3%81%84">for文で気づいた美しさ① - Lexerを触らなくていい</h1>
+<p><code>lexer.go</code> は<strong>1行も変更していない</strong></p>
+<pre is="marp-pre" data-auto-scaling="downscale-only"><code class="language-go"><span class="hljs-comment">// token.go の keywords map に1行追加するだけ</span>
+<span class="hljs-string">&quot;for&quot;</span>: FOR,
+</code></pre>
+<p><code>readIdentifier()</code> → <code>LookupIdent()</code> の仕組みが汎用的なので、<br />
+<strong>キーワードが何個増えてもLexerのロジックは不変</strong></p>
+<p>→ 「文字を読む処理」と「キーワードの定義」が完全に分離されている</p>
 </section>
 </foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="65" data-paginate="true" data-theme="default" data-style="section {
   font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', sans-serif;
@@ -3116,21 +3249,25 @@ code {
 table {
   font-size: 0.85em;
 }
-;" data-marpit-pagination-total="73">
-<h1 id="%E5%AD%A6%E3%82%93%E3%81%A0%E3%81%93%E3%81%A8%E3%83%BB%E6%B0%97%E3%81%A5%E3%81%8D13">学んだこと・気づき（1/3）</h1>
-<p><strong>言語処理とLLMの関係</strong></p>
-<ul>
-<li>言語は人間が読みやすい形から<strong>段階的に変換</strong>されて実行されている</li>
-<li>機械語に近い言語ならLLMの出力が良くなるのでは？<br />
-→ 使用率とドキュメントの充実度も重要</li>
-<li>TypeScriptがGitHub使用率No.1 — <strong>型定義がLLMとの相性が良さそう</strong></li>
-</ul>
-<p><strong>設計の本質は命名</strong></p>
-<ul>
-<li>ファイルごとに責任を分ける（定義だけ、変換だけ）</li>
-<li>役割から名前を命名 → <strong>命名できて初めて設計できた！</strong></li>
-<li>名前をつけるためにしっかり読み込んで仕組みを理解しないといけない</li>
-</ul>
+;" data-marpit-pagination-total="82">
+<h1 id="for%E6%96%87%E3%81%A7%E6%B0%97%E3%81%A5%E3%81%84%E3%81%9F%E7%BE%8E%E3%81%97%E3%81%95%E2%91%A1---%E6%97%A2%E5%AD%98%E3%83%91%E3%83%BC%E3%83%84%E3%81%AE%E7%B5%84%E3%81%BF%E5%90%88%E3%82%8F%E3%81%9B">for文で気づいた美しさ② - 既存パーツの組み合わせ</h1>
+<p>for文のパースで<strong>新しく発明したロジックはゼロ</strong>。全て既存パーツの再利用</p>
+<pre is="marp-pre" data-auto-scaling="downscale-only"><code class="language-go"><span class="hljs-comment">// parser.go - registerPrefixに1行追加するだけで構文が増える</span>
+p.registerPrefix(token.FOR, p.parseForExpression)
+
+<span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(p *Parser)</span></span> parseForExpression() ast.Expression {
+    <span class="hljs-comment">// init部分 → 既存の parseLetStatement() をそのまま呼ぶ</span>
+    expression.Init = p.parseLetStatement()
+
+    <span class="hljs-comment">// 条件部分 → 既存の parseExpression() をそのまま呼ぶ</span>
+    expression.Condition = p.parseExpression(LOWEST)
+
+    <span class="hljs-comment">// body部分 → if文・関数と全く同じ parseBlockStatement()</span>
+    expression.Body = p.parseBlockStatement()
+}
+</code></pre>
+<p><code>parseBlockStatement</code>、<code>parseLetStatement</code>、<code>parseExpression</code> …<br />
+<strong>独立した小さな関数として切り出してあるから、for文の中でもそのまま使える</strong></p>
 </section>
 </foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="66" data-paginate="true" data-theme="default" data-style="section {
   font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', sans-serif;
@@ -3162,7 +3299,389 @@ code {
 table {
   font-size: 0.85em;
 }
-;" data-marpit-pagination-total="73">
+;" data-marpit-pagination-total="82">
+<h1 id="for%E6%96%87%E3%81%A7%E6%B0%97%E3%81%A5%E3%81%84%E3%81%9F%E7%BE%8E%E3%81%97%E3%81%95%E2%91%A2---eval%E3%81%AEcase-1%E8%A1%8C--%E7%92%B0%E5%A2%83%E3%81%AE%E5%86%8D%E5%88%A9%E7%94%A8">for文で気づいた美しさ③ - Evalのcase 1行 + 環境の再利用</h1>
+<pre is="marp-pre" data-auto-scaling="downscale-only"><code class="language-go"><span class="hljs-comment">// evaluator.go の Eval に case を1行追加するだけ</span>
+<span class="hljs-keyword">case</span> *ast.ForExpression:
+    <span class="hljs-keyword">return</span> evalForExpression(node, env)
+</code></pre>
+<p>for文の変数スコープも<strong>既存の仕組み1行で解決</strong>:</p>
+<pre is="marp-pre" data-auto-scaling="downscale-only"><code class="language-go"><span class="hljs-comment">// 関数呼び出し用に作られた仕組みが、for文にもそのまま使える</span>
+forEnv := object.NewEnclosedEnvironment(env)
+</code></pre>
+<p>条件判定やエラー処理も既存ヘルパーをそのまま使う:</p>
+<pre is="marp-pre" data-auto-scaling="downscale-only"><code class="language-go"><span class="hljs-keyword">if</span> !isTruthy(condition) { <span class="hljs-keyword">break</span> }   <span class="hljs-comment">// if文と同じ関数</span>
+<span class="hljs-keyword">if</span> isError(val) { <span class="hljs-keyword">return</span> val }       <span class="hljs-comment">// 全ノード共通のパターン</span>
+</code></pre>
+<p>→ <strong>拡張に開いて、修正に閉じている</strong>（Open-Closed Principle）を体感</p>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="67" data-paginate="true" data-theme="default" data-style="section {
+  font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', sans-serif;
+}
+h1 {
+  color: #2d3748;
+}
+h2 {
+  color: #4a5568;
+}
+code {
+  background: #f7fafc;
+}
+table {
+  font-size: 0.85em;
+}
+" lang="ja-JP" data-marpit-pagination="67" style="--paginate:true;--theme:default;--style:section {
+  font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', sans-serif;
+}
+h1 {
+  color: #2d3748;
+}
+h2 {
+  color: #4a5568;
+}
+code {
+  background: #f7fafc;
+}
+table {
+  font-size: 0.85em;
+}
+;" data-marpit-pagination-total="82">
+<h1 id="%E5%AD%A6%E3%82%93%E3%81%A0%E3%81%93%E3%81%A8---%E3%83%A1%E3%82%BF%E3%83%97%E3%83%AD%E3%82%B0%E3%83%A9%E3%83%9F%E3%83%B3%E3%82%B0%E3%81%AE%E5%8A%9B">学んだこと - メタプログラミングの力</h1>
+<p>付録のマクロシステムで「<strong>言語のユーザーが言語自体を拡張できる</strong>」ことを体感</p>
+<ul>
+<li><code>unless</code> のような<strong>新しい制御構造</strong>をMonkeyコードだけで追加できる<br />
+（Go側のコードを触らずに！）</li>
+<li>関数では不可能なこと（引数の遅延評価）がマクロなら可能</li>
+<li><strong>コードとデータの境界が曖昧になる</strong> — Lispの哲学</li>
+</ul>
+<p>マクロ展開を「パーサーと評価器の間」に挟む設計は<br />
+<strong>既存の処理パイプラインを壊さずに新しいフェーズを追加</strong>する好例</p>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="68" data-paginate="true" data-theme="default" data-style="section {
+  font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', sans-serif;
+}
+h1 {
+  color: #2d3748;
+}
+h2 {
+  color: #4a5568;
+}
+code {
+  background: #f7fafc;
+}
+table {
+  font-size: 0.85em;
+}
+" lang="ja-JP" data-marpit-pagination="68" style="--paginate:true;--theme:default;--style:section {
+  font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', sans-serif;
+}
+h1 {
+  color: #2d3748;
+}
+h2 {
+  color: #4a5568;
+}
+code {
+  background: #f7fafc;
+}
+table {
+  font-size: 0.85em;
+}
+;" data-marpit-pagination-total="82">
+<h1 id="%E5%AD%A6%E3%82%93%E3%81%A0%E3%81%93%E3%81%A8---go%E8%A8%80%E8%AA%9E%E3%81%AE%E7%9F%A5%E8%AD%98">学んだこと - Go言語の知識</h1>
+<ul>
+<li><strong>インターフェース</strong>: 異なる型を統一的に扱う仕組み（Node, Statement, Expression, Object, Hashable）</li>
+<li><strong>ポインタ（<code>*</code>）</strong>: 状態の共有とコピー回避のために必要</li>
+<li><strong>パッケージ構造</strong>: 責務ごとにコードを分離する設計</li>
+<li><strong><code>switch ... .(type)</code></strong>: 型で処理を振り分けるGoの型アサーション</li>
+<li><strong>可変長引数 <code>...</code></strong>: 組み込み関数の <code>func(args ...object.Object)</code> で活用</li>
+<li><strong><code>copy</code> と <code>make</code></strong>: イミュータブルな操作でスライスを安全にコピー</li>
+</ul>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="69" data-paginate="true" data-theme="default" data-style="section {
+  font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', sans-serif;
+}
+h1 {
+  color: #2d3748;
+}
+h2 {
+  color: #4a5568;
+}
+code {
+  background: #f7fafc;
+}
+table {
+  font-size: 0.85em;
+}
+" lang="ja-JP" data-marpit-pagination="69" style="--paginate:true;--theme:default;--style:section {
+  font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', sans-serif;
+}
+h1 {
+  color: #2d3748;
+}
+h2 {
+  color: #4a5568;
+}
+code {
+  background: #f7fafc;
+}
+table {
+  font-size: 0.85em;
+}
+;" data-marpit-pagination-total="82">
+<h1 id="%E5%AD%A6%E3%82%93%E3%81%A0%E3%81%93%E3%81%A8---%E9%96%A2%E6%95%B0%E5%9E%8B%E3%83%97%E3%83%AD%E3%82%B0%E3%83%A9%E3%83%9F%E3%83%B3%E3%82%B0%E3%81%AE%E8%80%83%E3%81%88%E6%96%B9">学んだこと - 関数型プログラミングの考え方</h1>
+<p>Monkey言語には<strong>ループ構文がない</strong></p>
+<pre is="marp-pre" data-auto-scaling="downscale-only"><code class="language-javascript"><span class="hljs-comment">// for/while の代わりに再帰 + 組み込み関数</span>
+<span class="hljs-keyword">let</span> reduce = <span class="hljs-title function_">fn</span>(<span class="hljs-params">arr, initial, f</span>) {
+    <span class="hljs-keyword">if</span> (<span class="hljs-title function_">len</span>(arr) == <span class="hljs-number">0</span>) { <span class="hljs-keyword">return</span> initial; }
+    <span class="hljs-title function_">reduce</span>(<span class="hljs-title function_">rest</span>(arr), <span class="hljs-title function_">f</span>(initial, <span class="hljs-title function_">first</span>(arr)), f);
+};
+
+<span class="hljs-keyword">let</span> sum = <span class="hljs-title function_">fn</span>(<span class="hljs-params">arr</span>) {
+    <span class="hljs-title function_">reduce</span>(arr, <span class="hljs-number">0</span>, <span class="hljs-title function_">fn</span>(<span class="hljs-params">acc, el</span>) { acc + el });
+};
+
+<span class="hljs-title function_">sum</span>([<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>, <span class="hljs-number">5</span>]);  <span class="hljs-comment">// =&gt; 15</span>
+</code></pre>
+<ul>
+<li><strong>イミュータブルなデータ操作</strong>（push/rest は元を壊さない）</li>
+<li><strong>第一級関数</strong>（関数を引数に渡せる、変数に入れられる）</li>
+</ul>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="70" data-paginate="true" data-theme="default" data-style="section {
+  font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', sans-serif;
+}
+h1 {
+  color: #2d3748;
+}
+h2 {
+  color: #4a5568;
+}
+code {
+  background: #f7fafc;
+}
+table {
+  font-size: 0.85em;
+}
+" lang="ja-JP" data-marpit-pagination="70" style="--paginate:true;--theme:default;--style:section {
+  font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', sans-serif;
+}
+h1 {
+  color: #2d3748;
+}
+h2 {
+  color: #4a5568;
+}
+code {
+  background: #f7fafc;
+}
+table {
+  font-size: 0.85em;
+}
+;" data-marpit-pagination-total="82">
+<h1 id="%E8%81%9E%E3%81%8D%E3%81%9F%E3%81%84%E3%81%93%E3%81%A8---%E5%89%8D%E5%9B%9E%E3%81%AE%E8%AD%B0%E8%AB%96%E3%81%AE%E6%B7%B1%E6%8E%98%E3%82%8A">聞きたいこと - 前回の議論の深掘り</h1>
+<ul>
+<li>前回「<strong>設計の本質は命名</strong>」という話がありましたが、<br />
+大葉さんがコードレビューで「命名が良い/悪い」と感じる基準はありますか？<br />
+→ チーム全体で命名力を上げるために工夫していることはありますか？</li>
+<li>前回「<strong>ペアプロ・モブプロで全部やる</strong>」という話が印象的でした。<br />
+導入初期にメンバーから抵抗はありましたか？定着するまでのコツは？</li>
+<li>「<strong>マイクロサービスで言語が違うと運用がめんどくさい</strong>」とのことでしたが、<br />
+技術スタックを統一する vs 最適な言語を選ぶ、の判断基準はありますか？</li>
+</ul>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="71" data-paginate="true" data-theme="default" data-style="section {
+  font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', sans-serif;
+}
+h1 {
+  color: #2d3748;
+}
+h2 {
+  color: #4a5568;
+}
+code {
+  background: #f7fafc;
+}
+table {
+  font-size: 0.85em;
+}
+" lang="ja-JP" data-marpit-pagination="71" style="--paginate:true;--theme:default;--style:section {
+  font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', sans-serif;
+}
+h1 {
+  color: #2d3748;
+}
+h2 {
+  color: #4a5568;
+}
+code {
+  background: #f7fafc;
+}
+table {
+  font-size: 0.85em;
+}
+;" data-marpit-pagination-total="82">
+<h1 id="%E8%81%9E%E3%81%8D%E3%81%9F%E3%81%84%E3%81%93%E3%81%A8---vpoe%E3%81%A8%E3%81%97%E3%81%A6%E3%81%AE%E7%B5%84%E7%B9%94%E3%81%A5%E3%81%8F%E3%82%8A">聞きたいこと - VPoEとしての組織づくり</h1>
+<ul>
+<li>エンジニアの<strong>技術力をどう評価</strong>していますか？<br />
+コードの品質、設計力、問題解決力など、見ているポイントは？</li>
+<li>「この人は伸びる」と感じるエンジニアに共通する特徴はありますか？</li>
+<li>チームの技術力を底上げするために、<br />
+モブプロ以外に取り組んでいる施策はありますか？<br />
+（勉強会、読書会、技術共有の仕組みなど）</li>
+</ul>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="72" data-paginate="true" data-theme="default" data-style="section {
+  font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', sans-serif;
+}
+h1 {
+  color: #2d3748;
+}
+h2 {
+  color: #4a5568;
+}
+code {
+  background: #f7fafc;
+}
+table {
+  font-size: 0.85em;
+}
+" lang="ja-JP" data-marpit-pagination="72" style="--paginate:true;--theme:default;--style:section {
+  font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', sans-serif;
+}
+h1 {
+  color: #2d3748;
+}
+h2 {
+  color: #4a5568;
+}
+code {
+  background: #f7fafc;
+}
+table {
+  font-size: 0.85em;
+}
+;" data-marpit-pagination-total="82">
+<h1 id="%E8%81%9E%E3%81%8D%E3%81%9F%E3%81%84%E3%81%93%E3%81%A8---%E6%8A%80%E8%A1%93%E3%81%A8%E3%82%AD%E3%83%A3%E3%83%AA%E3%82%A2">聞きたいこと - 技術とキャリア</h1>
+<ul>
+<li>今回for文の実装に取り組んでいますが、このような<strong>本に無い機能を自力で追加する経験</strong>は、<br />
+実務でどのくらい活きると思いますか？</li>
+<li>エンジニアとして<strong>最初の1〜2年で身につけるべきこと</strong>として、<br />
+大葉さんが最も重要だと思うものは何ですか？</li>
+<li>VPoEになるまでのキャリアの中で、<br />
+<strong>転機になった経験や学び</strong>があれば教えてください</li>
+</ul>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="73" data-paginate="true" data-theme="default" data-style="section {
+  font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', sans-serif;
+}
+h1 {
+  color: #2d3748;
+}
+h2 {
+  color: #4a5568;
+}
+code {
+  background: #f7fafc;
+}
+table {
+  font-size: 0.85em;
+}
+" lang="ja-JP" data-marpit-pagination="73" style="--paginate:true;--theme:default;--style:section {
+  font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', sans-serif;
+}
+h1 {
+  color: #2d3748;
+}
+h2 {
+  color: #4a5568;
+}
+code {
+  background: #f7fafc;
+}
+table {
+  font-size: 0.85em;
+}
+;" data-marpit-pagination-total="82">
+<h1 id="%E6%8C%AF%E3%82%8A%E8%BF%94%E3%82%8A%E4%BC%9A26%E3%81%AE%E8%AD%B0%E8%AB%96%E3%81%BE%E3%81%A8%E3%82%81">振り返り会（2/6）の議論まとめ</h1>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="74" data-paginate="true" data-theme="default" data-style="section {
+  font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', sans-serif;
+}
+h1 {
+  color: #2d3748;
+}
+h2 {
+  color: #4a5568;
+}
+code {
+  background: #f7fafc;
+}
+table {
+  font-size: 0.85em;
+}
+" lang="ja-JP" data-marpit-pagination="74" style="--paginate:true;--theme:default;--style:section {
+  font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', sans-serif;
+}
+h1 {
+  color: #2d3748;
+}
+h2 {
+  color: #4a5568;
+}
+code {
+  background: #f7fafc;
+}
+table {
+  font-size: 0.85em;
+}
+;" data-marpit-pagination-total="82">
+<h1 id="%E5%AD%A6%E3%82%93%E3%81%A0%E3%81%93%E3%81%A8%E3%83%BB%E6%B0%97%E3%81%A5%E3%81%8D13">学んだこと・気づき（1/3）</h1>
+<p><strong>言語処理とLLMの関係</strong></p>
+<ul>
+<li>言語は人間が読みやすい形から<strong>段階的に変換</strong>されて実行されている</li>
+<li>機械語に近い言語ならLLMの出力が良くなるのでは？<br />
+→ 使用率とドキュメントの充実度も重要</li>
+<li>TypeScriptがGitHub使用率No.1 — <strong>型定義がLLMとの相性が良さそう</strong></li>
+</ul>
+<p><strong>設計の本質は命名</strong></p>
+<ul>
+<li>ファイルごとに責任を分ける（定義だけ、変換だけ）</li>
+<li>役割から名前を命名 → <strong>命名できて初めて設計できた！</strong></li>
+<li>名前をつけるためにしっかり読み込んで仕組みを理解しないといけない</li>
+</ul>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="75" data-paginate="true" data-theme="default" data-style="section {
+  font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', sans-serif;
+}
+h1 {
+  color: #2d3748;
+}
+h2 {
+  color: #4a5568;
+}
+code {
+  background: #f7fafc;
+}
+table {
+  font-size: 0.85em;
+}
+" lang="ja-JP" data-marpit-pagination="75" style="--paginate:true;--theme:default;--style:section {
+  font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', sans-serif;
+}
+h1 {
+  color: #2d3748;
+}
+h2 {
+  color: #4a5568;
+}
+code {
+  background: #f7fafc;
+}
+table {
+  font-size: 0.85em;
+}
+;" data-marpit-pagination-total="82">
 <h1 id="%E5%AD%A6%E3%82%93%E3%81%A0%E3%81%93%E3%81%A8%E3%83%BB%E6%B0%97%E3%81%A5%E3%81%8D23">学んだこと・気づき（2/3）</h1>
 <p><strong>各パッケージの役割を一言で</strong></p>
 <table>
@@ -3196,7 +3715,7 @@ table {
 </tbody>
 </table>
 </section>
-</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="67" data-paginate="true" data-theme="default" data-style="section {
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="76" data-paginate="true" data-theme="default" data-style="section {
   font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', sans-serif;
 }
 h1 {
@@ -3211,7 +3730,7 @@ code {
 table {
   font-size: 0.85em;
 }
-" lang="ja-JP" data-marpit-pagination="67" style="--paginate:true;--theme:default;--style:section {
+" lang="ja-JP" data-marpit-pagination="76" style="--paginate:true;--theme:default;--style:section {
   font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', sans-serif;
 }
 h1 {
@@ -3226,7 +3745,7 @@ code {
 table {
   font-size: 0.85em;
 }
-;" data-marpit-pagination-total="73">
+;" data-marpit-pagination-total="82">
 <h1 id="%E5%AD%A6%E3%82%93%E3%81%A0%E3%81%93%E3%81%A8%E3%83%BB%E6%B0%97%E3%81%A5%E3%81%8D33">学んだこと・気づき（3/3）</h1>
 <p><strong>テスト駆動開発</strong></p>
 <ul>
@@ -3242,7 +3761,7 @@ table {
 <li>テストがめんどくさい</li>
 </ul>
 </section>
-</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="68" data-paginate="true" data-theme="default" data-style="section {
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="77" data-paginate="true" data-theme="default" data-style="section {
   font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', sans-serif;
 }
 h1 {
@@ -3257,7 +3776,7 @@ code {
 table {
   font-size: 0.85em;
 }
-" lang="ja-JP" data-marpit-pagination="68" style="--paginate:true;--theme:default;--style:section {
+" lang="ja-JP" data-marpit-pagination="77" style="--paginate:true;--theme:default;--style:section {
   font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', sans-serif;
 }
 h1 {
@@ -3272,7 +3791,7 @@ code {
 table {
   font-size: 0.85em;
 }
-;" data-marpit-pagination-total="73">
+;" data-marpit-pagination-total="82">
 <h1 id="go%E8%A8%80%E8%AA%9E%E3%81%AE%E9%9B%B0%E5%9B%B2%E6%B0%97">Go言語の雰囲気</h1>
 <ul>
 <li>まあまあ読みやすい — <strong>使ってる構文が少なくて覚えるものが少ない</strong></li>
@@ -3288,7 +3807,7 @@ table {
 </ul>
 <p>→ Goのリファレンスを見れば作れそう</p>
 </section>
-</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="69" data-paginate="true" data-theme="default" data-style="section {
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="78" data-paginate="true" data-theme="default" data-style="section {
   font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', sans-serif;
 }
 h1 {
@@ -3303,7 +3822,7 @@ code {
 table {
   font-size: 0.85em;
 }
-" lang="ja-JP" data-marpit-pagination="69" style="--paginate:true;--theme:default;--style:section {
+" lang="ja-JP" data-marpit-pagination="78" style="--paginate:true;--theme:default;--style:section {
   font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', sans-serif;
 }
 h1 {
@@ -3318,7 +3837,7 @@ code {
 table {
   font-size: 0.85em;
 }
-;" data-marpit-pagination-total="73">
+;" data-marpit-pagination-total="82">
 <h1 id="%E8%B3%AA%E7%96%91%E5%BF%9C%E7%AD%94---%E6%8A%80%E8%A1%93%E9%81%B8%E5%AE%9A%E3%81%A8%E8%A8%80%E8%AA%9E%E3%81%AE%E8%A3%8F%E5%81%B4">質疑応答 - 技術選定と言語の裏側</h1>
 <p><strong>Q. インタプリタやコンパイラなど言語の裏側の特性で技術選定する時ってある？</strong></p>
 <ul>
@@ -3335,7 +3854,7 @@ table {
 → 結局言語の数を減らす方向に</li>
 </ul>
 </section>
-</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="70" data-paginate="true" data-theme="default" data-style="section {
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="79" data-paginate="true" data-theme="default" data-style="section {
   font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', sans-serif;
 }
 h1 {
@@ -3350,7 +3869,7 @@ code {
 table {
   font-size: 0.85em;
 }
-" lang="ja-JP" data-marpit-pagination="70" style="--paginate:true;--theme:default;--style:section {
+" lang="ja-JP" data-marpit-pagination="79" style="--paginate:true;--theme:default;--style:section {
   font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', sans-serif;
 }
 h1 {
@@ -3365,7 +3884,7 @@ code {
 table {
   font-size: 0.85em;
 }
-;" data-marpit-pagination-total="73">
+;" data-marpit-pagination-total="82">
 <h1 id="%E8%B3%AA%E7%96%91%E5%BF%9C%E7%AD%94---%E3%83%91%E3%83%BC%E3%82%B9%E6%89%8B%E6%B3%95%E3%81%AE%E8%AA%8D%E7%9F%A5%E5%BA%A6">質疑応答 - パース手法の認知度</h1>
 <p><strong>Q. 言語ごとのパースの手法をどれくらいのエンジニアが把握している？</strong></p>
 <ul>
@@ -3379,7 +3898,7 @@ table {
 <li><strong>ビッグデータを扱うときに実感</strong>する</li>
 </ul>
 </section>
-</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="71" data-paginate="true" data-theme="default" data-style="section {
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="80" data-paginate="true" data-theme="default" data-style="section {
   font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', sans-serif;
 }
 h1 {
@@ -3394,7 +3913,7 @@ code {
 table {
   font-size: 0.85em;
 }
-" lang="ja-JP" data-marpit-pagination="71" style="--paginate:true;--theme:default;--style:section {
+" lang="ja-JP" data-marpit-pagination="80" style="--paginate:true;--theme:default;--style:section {
   font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', sans-serif;
 }
 h1 {
@@ -3409,7 +3928,7 @@ code {
 table {
   font-size: 0.85em;
 }
-;" data-marpit-pagination-total="73">
+;" data-marpit-pagination-total="82">
 <h1 id="%E8%B3%AA%E7%96%91%E5%BF%9C%E7%AD%94---%E3%83%86%E3%82%B9%E3%83%88%E9%A7%86%E5%8B%95%E9%96%8B%E7%99%BA%E3%81%AE%E5%AE%9F%E6%85%8B">質疑応答 - テスト駆動開発の実態</h1>
 <p><strong>Q. テスト駆動開発はどれくらい導入している？</strong></p>
 <ul>
@@ -3425,7 +3944,7 @@ table {
 <li>lintチェックできないやつはモブプロ向いてない</li>
 </ul>
 </section>
-</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="72" data-paginate="true" data-theme="default" data-style="section {
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="81" data-paginate="true" data-theme="default" data-style="section {
   font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', sans-serif;
 }
 h1 {
@@ -3440,7 +3959,7 @@ code {
 table {
   font-size: 0.85em;
 }
-" lang="ja-JP" data-marpit-pagination="72" style="--paginate:true;--theme:default;--style:section {
+" lang="ja-JP" data-marpit-pagination="81" style="--paginate:true;--theme:default;--style:section {
   font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', sans-serif;
 }
 h1 {
@@ -3455,7 +3974,7 @@ code {
 table {
   font-size: 0.85em;
 }
-;" data-marpit-pagination-total="73">
+;" data-marpit-pagination-total="82">
 <h1 id="%E8%B3%AA%E7%96%91%E5%BF%9C%E7%AD%94---%E6%8A%80%E8%A1%93%E6%9B%B8%E3%81%AE%E8%AA%AD%E3%81%BF%E6%96%B9%E3%83%BB%E6%83%85%E5%A0%B1%E5%8F%8E%E9%9B%86">質疑応答 - 技術書の読み方・情報収集</h1>
 <p><strong>Q. 新しい技術領域の本を読む時のおすすめの読み方は？</strong></p>
 <ul>
@@ -3471,7 +3990,7 @@ table {
 <li><strong>Hacker News</strong></li>
 </ul>
 </section>
-</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="73" data-paginate="true" data-theme="default" data-style="section {
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="82" data-paginate="true" data-theme="default" data-style="section {
   font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', sans-serif;
 }
 h1 {
@@ -3486,7 +4005,7 @@ code {
 table {
   font-size: 0.85em;
 }
-" lang="ja-JP" data-marpit-pagination="73" style="--paginate:true;--theme:default;--style:section {
+" lang="ja-JP" data-marpit-pagination="82" style="--paginate:true;--theme:default;--style:section {
   font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', sans-serif;
 }
 h1 {
@@ -3501,7 +4020,7 @@ code {
 table {
   font-size: 0.85em;
 }
-;" data-marpit-pagination-total="73">
+;" data-marpit-pagination-total="82">
 <h1 id="%E3%81%82%E3%82%8A%E3%81%8C%E3%81%A8%E3%81%86%E3%81%94%E3%81%96%E3%81%84%E3%81%BE%E3%81%97%E3%81%9F">ありがとうございました</h1>
 </section>
 <script>!function(){"use strict";const t={h1:{proto:()=>HTMLHeadingElement,attrs:{role:"heading","aria-level":"1"},style:"display: block; font-size: 2em; margin-block-start: 0.67em; margin-block-end: 0.67em; margin-inline-start: 0px; margin-inline-end: 0px; font-weight: bold;"},h2:{proto:()=>HTMLHeadingElement,attrs:{role:"heading","aria-level":"2"},style:"display: block; font-size: 1.5em; margin-block-start: 0.83em; margin-block-end: 0.83em; margin-inline-start: 0px; margin-inline-end: 0px; font-weight: bold;"},h3:{proto:()=>HTMLHeadingElement,attrs:{role:"heading","aria-level":"3"},style:"display: block; font-size: 1.17em; margin-block-start: 1em; margin-block-end: 1em; margin-inline-start: 0px; margin-inline-end: 0px; font-weight: bold;"},h4:{proto:()=>HTMLHeadingElement,attrs:{role:"heading","aria-level":"4"},style:"display: block; margin-block-start: 1.33em; margin-block-end: 1.33em; margin-inline-start: 0px; margin-inline-end: 0px; font-weight: bold;"},h5:{proto:()=>HTMLHeadingElement,attrs:{role:"heading","aria-level":"5"},style:"display: block; font-size: 0.83em; margin-block-start: 1.67em; margin-block-end: 1.67em; margin-inline-start: 0px; margin-inline-end: 0px; font-weight: bold;"},h6:{proto:()=>HTMLHeadingElement,attrs:{role:"heading","aria-level":"6"},style:"display: block; font-size: 0.67em; margin-block-start: 2.33em; margin-block-end: 2.33em; margin-inline-start: 0px; margin-inline-end: 0px; font-weight: bold;"},span:{proto:()=>HTMLSpanElement},pre:{proto:()=>HTMLElement,style:"display: block; font-family: monospace; white-space: pre; margin: 1em 0; --marp-auto-scaling-white-space: pre;"}},e="data-marp-auto-scaling-wrapper",i="data-marp-auto-scaling-svg",n="data-marp-auto-scaling-container";class s extends HTMLElement{container;containerSize;containerObserver;svg;svgComputedStyle;svgPreserveAspectRatio="xMinYMid meet";wrapper;wrapperSize;wrapperObserver;constructor(){super();const t=t=>([e])=>{const{width:i,height:n}=e.contentRect;this[t]={width:i,height:n},this.updateSVGRect()};this.attachShadow({mode:"open"}),this.containerObserver=new ResizeObserver(t("containerSize")),this.wrapperObserver=new ResizeObserver((...e)=>{t("wrapperSize")(...e),this.flushSvgDisplay()})}static get observedAttributes(){return["data-downscale-only"]}connectedCallback(){this.shadowRoot.innerHTML=`\n<style>\n  svg[${i}] { display: block; width: 100%; height: auto; vertical-align: top; }\n  span[${n}] { display: table; white-space: var(--marp-auto-scaling-white-space, nowrap); width: max-content; }\n</style>\n<div ${e}>\n  <svg part="svg" ${i}>\n    <foreignObject><span ${n}><slot></slot></span></foreignObject>\n  </svg>\n</div>\n    `.split(/\n\s*/).join(""),this.wrapper=this.shadowRoot.querySelector(`div[${e}]`)??void 0;const t=this.svg;this.svg=this.wrapper?.querySelector(`svg[${i}]`)??void 0,this.svg!==t&&(this.svgComputedStyle=this.svg?window.getComputedStyle(this.svg):void 0),this.container=this.svg?.querySelector(`span[${n}]`)??void 0,this.observe()}disconnectedCallback(){this.svg=void 0,this.svgComputedStyle=void 0,this.wrapper=void 0,this.container=void 0,this.observe()}attributeChangedCallback(){this.observe()}flushSvgDisplay(){const{svg:t}=this;t&&(t.style.display="inline",requestAnimationFrame(()=>{t.style.display=""}))}observe(){this.containerObserver.disconnect(),this.wrapperObserver.disconnect(),this.wrapper&&this.wrapperObserver.observe(this.wrapper),this.container&&this.containerObserver.observe(this.container),this.svgComputedStyle&&this.observeSVGStyle(this.svgComputedStyle)}observeSVGStyle(t){const e=()=>{const i=(()=>{const e=t.getPropertyValue("--preserve-aspect-ratio");if(e)return e.trim();return`x${(({textAlign:t,direction:e})=>{if(t.endsWith("left"))return"Min";if(t.endsWith("right"))return"Max";if("start"===t||"end"===t){let i="rtl"===e;return"end"===t&&(i=!i),i?"Max":"Min"}return"Mid"})(t)}YMid meet`})();i!==this.svgPreserveAspectRatio&&(this.svgPreserveAspectRatio=i,this.updateSVGRect()),t===this.svgComputedStyle&&requestAnimationFrame(e)};e()}updateSVGRect(){let t=Math.ceil(this.containerSize?.width??0);const e=Math.ceil(this.containerSize?.height??0);void 0!==this.dataset.downscaleOnly&&(t=Math.max(t,this.wrapperSize?.width??0));const i=this.svg?.querySelector(":scope > foreignObject");if(i?.setAttribute("width",`${t}`),i?.setAttribute("height",`${e}`),this.svg&&(this.svg.setAttribute("viewBox",`0 0 ${t} ${e}`),this.svg.setAttribute("preserveAspectRatio",this.svgPreserveAspectRatio),this.svg.style.height=t<=0||e<=0?"0":""),this.container){const t=this.svgPreserveAspectRatio.toLowerCase();this.container.style.marginLeft=t.startsWith("xmid")||t.startsWith("xmax")?"auto":"0",this.container.style.marginRight=t.startsWith("xmi")?"auto":"0"}}}const r=(t,{attrs:e={},style:i})=>class extends t{constructor(...t){super(...t);for(const[t,i]of Object.entries(e))this.hasAttribute(t)||this.setAttribute(t,i);this._shadow()}static get observedAttributes(){return["data-auto-scaling"]}connectedCallback(){this._update()}attributeChangedCallback(){this._update()}_shadow(){if(!this.shadowRoot)try{this.attachShadow({mode:"open"})}catch(t){if(!(t instanceof Error&&"NotSupportedError"===t.name))throw t}return this.shadowRoot}_update(){const t=this._shadow();if(t){const e=i?`<style>:host { ${i} }</style>`:"";let n="<slot></slot>";const{autoScaling:s}=this.dataset;if(void 0!==s){n=`<marp-auto-scaling exportparts="svg:auto-scaling" ${"downscale-only"===s?"data-downscale-only":""}>${n}</marp-auto-scaling>`}t.innerHTML=e+n}}};let o;const a=Symbol(),l=()=>o??(o=!!document.createElement("div",{is:"marp-auto-scaling"}).outerHTML.startsWith("<div is"),o);let c;const d="marpitSVGPolyfill:setZoomFactor,",h=Symbol(),g=Symbol();const p=()=>{const t="Apple Computer, Inc."===navigator.vendor,e=t?[v]:[],i={then:e=>(t?(async()=>{if(void 0===c){const t=document.createElement("canvas");t.width=10,t.height=10;const e=t.getContext("2d"),i=new Image(10,10),n=new Promise(t=>{i.addEventListener("load",()=>t())});i.crossOrigin="anonymous",i.src="data:image/svg+xml;charset=utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2210%22%20height%3D%2210%22%20viewBox%3D%220%200%201%201%22%3E%3CforeignObject%20width%3D%221%22%20height%3D%221%22%20requiredExtensions%3D%22http%3A%2F%2Fwww.w3.org%2F1999%2Fxhtml%22%3E%3Cdiv%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F1999%2Fxhtml%22%20style%3D%22width%3A%201px%3B%20height%3A%201px%3B%20background%3A%20red%3B%20position%3A%20relative%22%3E%3C%2Fdiv%3E%3C%2FforeignObject%3E%3C%2Fsvg%3E",await n,e.drawImage(i,0,0),c=e.getImageData(5,5,1,1).data[3]<128}return c})().then(t=>{null==e||e(t?[v]:[])}):null==e||e([]),i)};return Object.assign(e,i)};let m,u;function v(t){const e="object"==typeof t&&t.target||document,i="object"==typeof t?t.zoom:t;window[g]||(Object.defineProperty(window,g,{configurable:!0,value:!0}),document.body.style.zoom=1.0001,document.body.offsetHeight,document.body.style.zoom=1,window.addEventListener("message",({data:t,origin:e})=>{if(e===window.origin)try{if(t&&"string"==typeof t&&t.startsWith(d)){const[,e]=t.split(","),i=Number.parseFloat(e);Number.isNaN(i)||(u=i)}}catch(t){console.error(t)}}));let n=!1;Array.from(e.querySelectorAll("svg[data-marpit-svg]"),t=>{var e,s,r,o;t.style.transform||(t.style.transform="translateZ(0)");const a=i||u||t.currentScale||1;m!==a&&(m=a,n=a);const l=t.getBoundingClientRect(),{length:c}=t.children;for(let i=0;i<c;i+=1){const n=t.children[i];if(n.getScreenCTM){const t=n.getScreenCTM();if(t){const i=null!==(s=null===(e=n.x)||void 0===e?void 0:e.baseVal.value)&&void 0!==s?s:0,c=null!==(o=null===(r=n.y)||void 0===r?void 0:r.baseVal.value)&&void 0!==o?o:0,d=n.children.length;for(let e=0;e<d;e+=1){const s=n.children[e];if("SECTION"===s.tagName){const{style:e}=s;e.transformOrigin||(e.transformOrigin=`${-i}px ${-c}px`),e.transform=`scale(${a}) matrix(${t.a}, ${t.b}, ${t.c}, ${t.d}, ${t.e-l.left}, ${t.f-l.top}) translateZ(0.0001px)`;break}}}}}}),!1!==n&&Array.from(e.querySelectorAll("iframe"),({contentWindow:t})=>{null==t||t.postMessage(`${d}${n}`,"null"===window.origin?"*":window.origin)})}function w({once:t=!1,target:e=document}={}){const i=function(t=document){if(t[h])return t[h];let e=!0;const i=()=>{e=!1,delete t[h]};Object.defineProperty(t,h,{configurable:!0,value:i});let n=[],s=!1;(async()=>{try{n=await p()}finally{s=!0}})();const r=()=>{for(const e of n)e({target:t});s&&0===n.length||e&&window.requestAnimationFrame(r)};return r(),i}(e);return t?(i(),()=>{}):i}m=1,u=void 0;const b=Symbol(),y=(e=document)=>{if("undefined"==typeof window)throw new Error("Marp Core's browser script is valid only in browser context.");if(((e=document)=>{const i=window[a];i||customElements.define("marp-auto-scaling",s);for(const n of Object.keys(t)){const s=`marp-${n}`,o=t[n].proto();l()&&o!==HTMLElement?i||customElements.define(s,r(o,{style:t[n].style}),{extends:n}):(i||customElements.define(s,r(HTMLElement,t[n])),e.querySelectorAll(`${n}[is="${s}"]`).forEach(t=>{t.outerHTML=t.outerHTML.replace(new RegExp(`^<${n}`,"i"),`<${s}`).replace(new RegExp(`</${n}>$`,"i"),`</${s}>`)}))}window[a]=!0})(e),e[b])return e[b];const i=w({target:e}),n=()=>{i(),delete e[b]},o=Object.assign(n,{cleanup:n,update:()=>y(e)});return Object.defineProperty(e,b,{configurable:!0,value:o}),o},f=document.currentScript;y(f?f.getRootNode():document)}();
